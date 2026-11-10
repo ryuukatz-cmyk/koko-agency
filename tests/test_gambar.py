@@ -71,7 +71,8 @@ class TestGambar(unittest.TestCase):
         asli = palsu.__call__
         gambar._post = lambda a: next(jawab) if ":generateContent" in a[-1] else asli(a)
         d = siapkan(2)
-        hasil = gambar.buat(d / "master.png", d)
+        # akun Cloudflare sengaja tidak ada (config/ asli tidak boleh ikut terbaca di tes ini)
+        hasil = gambar.buat(d / "master.png", d, akun_cf_file=d / "tidak-ada.txt")
         # F01: 503 lalu tidak ada provider lain -> kurang; F02 tetap dicoba Gemini
         self.assertEqual(hasil["kurang"], ["F01"])
         self.assertEqual(hasil["dibuat"], ["F02"])
