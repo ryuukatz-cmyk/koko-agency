@@ -12,7 +12,8 @@ Anggap setiap laporan pembuat belum terbukti. Periksa sendiri.
 a. **Product Lock** — buka `brain/product-lock/<sku>.md` dan foto master, lalu lihat SETIAP foto (Read file gambarnya).
    Untuk video, ambil beberapa frame: `ffmpeg -v error -ss <detik> -i <video> -frames:v 1 /tmp/frame_<n>.png` lalu Read.
    Bandingkan warna, bentuk, kerah, kancing, bordir/logo, detail. Satu detail berubah = TOLAK item itu.
-   Foto dari provider `cloudflare` (FLUX): periksa bordir/logo ekstra teliti.
+   Foto dari provider `cloudflare` (FLUX): periksa bordir/logo ekstra teliti. Hitung kancing satu per satu, dan cari detail
+   yang DITAMBAHKAN (label leher, logo, saku, motif) — di uji nyata FLUX mengurangi kancing 5→4 dan menambah label leher.
    Master buram/detail tidak bisa dipastikan → TOLAK + "oper ke manusia: minta master yang jelas".
 b. **Pasangan 1:1** — setiap Fxx punya Pxx (jika Flow dipakai) dan Vxx. Prompt tanpa pasangan video, atau video tanpa pasangan = REVISI.
    Klip Flow yang menampilkan produk/SKU lain = TOLAK.
