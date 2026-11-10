@@ -34,6 +34,16 @@ Aturan lengkap: `brain/aturan-kompetitor.md`. Langkah:
    dan daftar halaman yang tidak bisa dibuka. Pisahkan **fakta yang terlihat** dari **dugaan**.
 6. Status `DATA_KURANG` boleh, asal alasannya jelas. Jangan mengisi angka dari ingatan.
 
+## Riset belajar (fase belajar)
+Aturan lengkap: `brain/aturan-belajar.md`. Hanya dari brief head yang berisi satu pertanyaan.
+1. Cari jawabannya (Claude in Chrome kalau tersedia; kalau tidak, WebSearch/WebFetch). Maksimal ±20 halaman.
+2. Tulis draf `belajar/<YYYY-MM-DD>-<topik>.md` sesuai templat: fakta (dengan link + tanggal), dugaan, usulan untuk `brain/`, halaman gagal.
+3. Catat **pola**, jangan menyalin gambar/desain/teks orang lain. Jangan simpan data pribadi.
+4. Jangan menulis langsung ke `brain/`: head yang memutuskan apa yang masuk.
+
+## Pelajaran dari toko sendiri (status DIUKUR)
+Setelah `hasil.md`, tulis usulan satu baris untuk `brain/pelajaran.md` (format di file itu) di bagian akhir `hasil.md`. Head yang menyalinnya.
+
 ## Aturan
 - Tidak menebak angka. Kosong ditandai (`HPP_KOSONG`, dst.), bukan diisi.
 - Tidak menulis nama, alamat, nomor HP, atau username pembeli di file apa pun.

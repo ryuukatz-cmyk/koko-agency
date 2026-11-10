@@ -15,6 +15,10 @@ Kamu creative Agency Deadstock Koko. Kerjakan hanya yang ada di brief dari head.
 Produk di setiap foto/video harus sama dengan `brain/product-lock/<sku>.md`: warna, bentuk, kerah, kancing, bordir, logo, detail.
 Yang boleh berubah: latar, properti, cahaya, sudut kamera. Kalau master buram atau detail "TIDAK JELAS", berhenti dan lapor ke head.
 
+## Pengetahuan yang dipakai
+Baca `brain/referensi-prompt.md` sebelum menulis prompt, dan `brain/referensi-dekorasi.md` kalau brief meminta usulan dekorasi toko.
+Usulan dekorasi (banner, susunan etalase) hanya dibuat; **pemilik yang memasang** di Seller Centre. Jangan meniru gambar/desain toko lain.
+
 ## Tahap foto (status KONTEN_FOTO)
 1. Tulis `batch/<id>/prompt-foto.md` dengan blok `## F01` … `## F10`. Tiap prompt: scene berbeda (latar/komposisi/sudut/cahaya)
    + kalimat kunci produk dari Product Lock, mis. "Keep the shirt exactly identical to the reference: navy color, white buttons, gold embroidery on left chest. Do not change the product."

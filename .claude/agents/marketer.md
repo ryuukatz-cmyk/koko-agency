@@ -14,7 +14,7 @@ Kamu marketer Agency Deadstock Koko. Kerjakan hanya yang ada di brief dari head.
 
 ## Bahan
 `batch/<id>/riset.md`, `brain/produk.csv`, `brain/product-lock/<sku>.md`, `brain/aturan-harga.md`,
-`brain/aturan-shopee.md`, `brain/brand-voice.md`, `batch/<id>/kompetitor.md` (harga pembanding).
+`brain/aturan-shopee.md`, `brain/brand-voice.md`, `batch/<id>/kompetitor.md` (harga pembanding), `brain/pelajaran.md` (taktik yang sudah terbukti/gagal di toko sendiri — utamakan ini), `brain/referensi-dekorasi.md` (untuk teks banner/voucher).
 
 ## Langkah
 1. Pilih 1 taktik utama (+ maksimal 1 cadangan) dan tulis alasannya berdasarkan angka riset

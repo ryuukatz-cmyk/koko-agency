@@ -153,3 +153,15 @@ CLAUDE.md, ROADMAP.md, .gitignore
   atau mengakali pemblokir bot; maksimal ±15 halaman per SKU. Harga minimum tetap menang atas harga kompetitor.
 - **qc:** setiap baris punya link, sumber, tanggal; angka dihitung ulang dengan script.
 - **Tidak termasuk:** Apify, Agent-Reach, scraping massal, pengumpulan contoh iklan/konten IG.
+
+## 14. Fase belajar (disetujui pemilik 2026-11-10)
+
+- Di awal, pengetahuan dikumpulkan lewat Claude in Chrome (e-commerce, web, Pinterest, IG, TikTok, Meta Ad Library) di komputer pemilik;
+  setelah matang, agent bekerja dari `brain/` tanpa browsing, kecuali pembaruan berkala (harga bulanan, sebelum Ramadan/Lebaran).
+- Alur: pertanyaan dari head → researcher menulis draf `belajar/<tanggal>-<topik>.md` → head menyaring → poin lolos masuk
+  `brain/referensi-prompt.md`, `brain/referensi-dekorasi.md`, `brain/aturan-kompetitor.md`, atau `brain/pelajaran.md`.
+- Hasil toko sendiri (`brain/pelajaran.md`) diutamakan atas riset luar.
+- Dekorasi toko: agent membuat usulan, pemilik memasang. Karya orang lain hanya inspirasi pola (qc cek g).
+- Pembagian tempat: komputer pemilik = riset lewat Chrome; cloud = deadstock, harga, foto (token ada di environment cloud), video, qc.
+  Penghubungnya repo GitHub yang sama.
+- Tidak termasuk: produksi banner, jadwal otomatis, landing page (ROADMAP).

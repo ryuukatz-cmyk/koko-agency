@@ -30,6 +30,8 @@ e. **File final** — `python3 scripts/video.py --cek --out <file> --nama x --ha
 f. **Kompetitor** — jalankan ulang `python3 scripts/kompetitor.py --csv batch/<id>/kompetitor.csv --hari-ini ..`.
    Angka di `kompetitor.md`/`strategi.md` beda dengan script = REVISI. Ada baris `ditolak` = REVISI. Harga dari `cuplikan`
    dipakai sebagai patokan = REVISI. Klaim kompetitor disalin ke copy kita = TOLAK.
+g. **Meniru karya orang lain** — foto, banner, atau copy yang menyalin gambar/desain/teks toko lain atau Pinterest = TOLAK.
+   Pola boleh sama (mis. "harga besar di banner"), isinya harus milik kita.
 
 ## Format qc.md
 ```

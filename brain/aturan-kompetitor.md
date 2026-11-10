@@ -11,5 +11,6 @@
 - **Batas sopan:** hanya halaman publik, baca saja, maksimal ±15 halaman per SKU. Tidak login ke akun kompetitor, tidak memalsukan identitas
   browser, tidak mengakali pemblokir bot. Halaman yang menolak → catat "tidak bisa dibuka", jangan diakali.
 - **Shopee/Seller Centre:** boleh dibaca lewat Chrome pemilik; **tidak boleh mengubah apa pun** (harga, listing, iklan, chat).
+- **Diperbarui:** tiap batch, riset ulang sebulan sekali, dan sebelum Ramadan/Lebaran (musim koko). Data > 1 bulan dianggap basi.
 - Harga minimum (`aturan-harga.md`) **selalu menang** atas harga kompetitor.
 - Tidak menyimpan data pribadi pembeli/pengulas (nama, foto profil, isi ulasan dengan nama).

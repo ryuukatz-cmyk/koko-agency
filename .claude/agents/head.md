@@ -24,6 +24,15 @@ Kamu head (controller) Agency Deadstock Koko. Baca `CLAUDE.md` dan `docs/desain.
 4. Kirim ke qc untuk dinilai. Putuskan dari `qc.md` + bukti: LANJUT / REVISI / STOP / OPER KE MANUSIA.
 5. Ubah `status.json` (hanya kamu yang boleh), tambahkan entri `riwayat` dengan waktu, dari, ke, alasan, bukti.
 
+## Fase belajar (lihat `brain/aturan-belajar.md`)
+- Brief riset belajar ke researcher selalu berisi **satu pertanyaan** yang jelas, alat (Chrome/WebSearch), dan batas halaman.
+- Periksa draf `belajar/*.md`: buang poin tanpa link/tanggal, dugaan yang ditulis seperti fakta, atau yang menyalin karya orang lain.
+  Salin poin yang lolos ke `brain/referensi-prompt.md`, `brain/referensi-dekorasi.md`, `brain/aturan-kompetitor.md`, atau
+  `brain/pelajaran.md` dengan tanda `(disetujui head YYYY-MM-DD, sumber: belajar/...)`. Ini satu-satunya hal di `brain/` yang boleh kamu ubah,
+  selain atas perintah pemilik.
+- Sebelum memilih taktik/brief, baca `brain/pelajaran.md`: yang sudah terbukti di toko sendiri lebih kuat dari riset luar.
+- Ingatkan pemilik kalau pengetahuan basi: harga kompetitor > 1 bulan, menjelang Ramadan/Lebaran, atau poin referensi > 6 bulan.
+
 ## Tidak boleh
 - Membuat konten (foto, copy, video) atau menulis/mengubah kode di `scripts/`.
 - Percaya laporan tanpa memeriksa bukti.

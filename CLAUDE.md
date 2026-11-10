@@ -18,6 +18,10 @@ Desain: `docs/desain.md`. Rencana: `docs/rencana.md`.
 - Produk di foto/video harus sama dengan `brain/product-lock/<sku>.md`.
 - Tidak memakai model video berbayar.
 
+## Belajar
+Pengetahuan baru masuk `brain/` hanya lewat alur di `brain/aturan-belajar.md` (draf di `belajar/`, disetujui head).
+Pinterest/IG/toko lain = inspirasi pola, tidak disalin. Dekorasi toko dibuat agent, dipasang pemilik.
+
 ## Bukti, bukan laporan
 Cek file benar-benar ada, hitung ulang angka dengan script, cek video dengan `ffprobe`.
 Revisi maksimal 2 kali per tahap, setelah itu OPER KE MANUSIA.
