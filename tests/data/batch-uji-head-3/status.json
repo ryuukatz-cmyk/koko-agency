@@ -1,0 +1,9 @@
+{
+  "batch": "batch-uji-head-3",
+  "sku": "CONTOH-KOKO-01",
+  "status": "QC_FOTO",
+  "revisi": {
+    "KONTEN_FOTO": 2
+  },
+  "riwayat": []
+}
