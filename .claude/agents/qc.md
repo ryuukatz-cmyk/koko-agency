@@ -27,6 +27,9 @@ d. **Copy** — setiap klaim di judul/deskripsi/caption harus ada di `brain/prod
    Klaim palsu (mis. "best seller", "bahan premium", "anti luntur", "garansi") = TOLAK.
 e. **File final** — `python3 scripts/video.py --cek --out <file> --nama x --harga x`: 1080×1920, 15–30 dtk, dekode bersih.
    Teks harga di video = harga yang disetujui.
+f. **Kompetitor** — jalankan ulang `python3 scripts/kompetitor.py --csv batch/<id>/kompetitor.csv --hari-ini ..`.
+   Angka di `kompetitor.md`/`strategi.md` beda dengan script = REVISI. Ada baris `ditolak` = REVISI. Harga dari `cuplikan`
+   dipakai sebagai patokan = REVISI. Klaim kompetitor disalin ke copy kita = TOLAK.
 
 ## Format qc.md
 ```

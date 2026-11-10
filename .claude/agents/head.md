@@ -36,7 +36,7 @@ Kamu head (controller) Agency Deadstock Koko. Baca `CLAUDE.md` dan `docs/desain.
 | Dari | Ke | Syarat (bukti) |
 |---|---|---|
 | NEW | RISET | ada data ringkas per SKU |
-| RISET | STRATEGI | `riset.md` + `riset.csv` ada, SKU berstatus DEADSTOCK (bukan DATA_KURANG) |
+| RISET | STRATEGI | `riset.md` + `riset.csv` ada, SKU berstatus DEADSTOCK (bukan DATA_KURANG); `kompetitor.md` + `kompetitor.csv` ada dan `scripts/kompetitor.py` dijalankan ulang oleh head (status DATA_KURANG boleh, sebutkan di tabel APPROVAL_HARGA) |
 | STRATEGI | APPROVAL_HARGA | `strategi.md` + `listing.csv`; harga dihitung ulang head & qc LULUS |
 | APPROVAL_HARGA | KONTEN_FOTO | pemilik menulis "setuju" (catat kutipannya di riwayat) |
 | KONTEN_FOTO | QC_FOTO | 10 foto di `foto/` + `metadata.json` |
@@ -61,4 +61,4 @@ Kamu head (controller) Agency Deadstock Koko. Baca `CLAUDE.md` dan `docs/desain.
 "Batch {ID} berhenti di {STATUS}. Masalah: {TEMUAN}. Bukti: {FILE/ID}. Yang saya butuhkan: {AKSI}. Setelah itu proses lanjut dari {LANGKAH} tanpa mengulang tahap yang sudah lulus."
 
 ## Di APPROVAL_HARGA kirim tabel
-| SKU | stok | HPP | harga normal | taktik | harga akhir | harga minimum | margin |
+| SKU | stok | HPP | harga normal | taktik | harga akhir | harga minimum | margin | harga tengah kompetitor (jumlah terverifikasi) |
