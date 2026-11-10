@@ -137,3 +137,19 @@ CLAUDE.md, ROADMAP.md, .gitignore
 - HTTP lewat `curl` (sudah ikut proxy dan CA), dibungkus satu fungsi agar bisa di-mock.
 - Ukuran foto default 1024×1024; video menaruh foto persegi di kanvas 9:16 berlatar putih.
 - Durasi slideshow: 3 detik per foto, dibatasi 15–30 detik total.
+
+## 13. Riset kompetitor (disetujui pemilik 2026-11-10)
+
+- **Kapan:** setelah RISET memilih SKU, sebelum STRATEGI. Brief dari head ke researcher.
+- **Hasil:** `batch/<id>/kompetitor.csv` + `kompetitor.md`, minimal 5 produk mirip (jenis, lengan, bordir/motif, warna).
+  Kolom: `sku_kita,platform,toko,judul,harga,harga_coret,terjual,rating,link,sumber,dicek_pada`.
+- **Sumber (gratis saja):**
+  - `cuplikan` — hasil pencarian web (WebSearch). Tidak dihitung, hanya petunjuk.
+  - `halaman` — halaman produk dibuka langsung (WebFetch; Tokopedia/Blibli diizinkan di environment).
+  - `chrome` — dibaca lewat Claude in Chrome di komputer pemilik (Shopee, TikTok Shop, IG, Meta Ad Library).
+- **Hitungan:** `scripts/kompetitor.py` menghitung harga termurah, tengah (median), termahal **hanya dari `halaman`/`chrome`**.
+  Kurang dari 5 terverifikasi → `DATA_KURANG` (tidak memblokir, tapi marketer & pemilik diberi tahu).
+- **Aturan:** hanya membaca halaman publik; tidak login, tidak mengubah apa pun di Shopee/Seller Centre; tidak memalsukan identitas browser
+  atau mengakali pemblokir bot; maksimal ±15 halaman per SKU. Harga minimum tetap menang atas harga kompetitor.
+- **qc:** setiap baris punya link, sumber, tanggal; angka dihitung ulang dengan script.
+- **Tidak termasuk:** Apify, Agent-Reach, scraping massal, pengumpulan contoh iklan/konten IG.

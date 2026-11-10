@@ -73,3 +73,32 @@ Masing-masing punya tes di tugas pemiliknya.
 - [ ] Jalankan tes script + QC independen (subagent dengan instruksi `qc.md`) + head untuk kasus intake.
 - [ ] Satu video slideshow nyata + ffprobe. `tests/hasil-uji.md`.
 - [ ] Review kode oleh `agent-skills:code-reviewer`; perbaiki temuan serius. Verifikasi akhir. Commit, push, berhenti.
+
+---
+
+## Tambahan: Riset kompetitor (desain §13)
+
+**Goal:** researcher menghasilkan tabel harga pembanding per SKU yang angkanya bisa dicek; marketer & qc memakainya.
+
+**Review Focus**
+1. Harga ditulis "125rb" → terbaca 125 → harus ditolak (harga < Rp1.000 tidak masuk akal).
+2. Link sama dicatat dua kali → dihitung sekali.
+3. Baris tanpa link/sumber/tanggal, atau tanggal di masa depan → ditolak dengan alasan, bukan diam-diam dipakai.
+4. Jumlah terverifikasi genap → median memakai harga nyata (median bawah), bukan rata-rata dua harga.
+5. File tanpa kolom wajib → exit 2 dengan nama kolom.
+
+### Task 9: `scripts/kompetitor.py` (TDD)
+**Produces:** `ringkas(rows:list[dict], hari_ini:date, min_pembanding=5, harga_kita:int|None=None) -> dict` dengan kunci
+`jumlah_baris, terverifikasi, cuplikan, ditolak:[{baris,alasan}], harga_min, harga_median, harga_max, lebih_murah_dari_kita, status ("CUKUP"|"DATA_KURANG")`.
+CLI `--csv --hari-ini [--harga-kita]`, cetak JSON; exit 0 CUKUP, 1 DATA_KURANG, 2 input salah. Pakai `export.angka`, `export.baca_tabel`.
+- [ ] Tes `tests/test_kompetitor.py`: 5 terverifikasi [100k,120k,150k,180k,200k] + 2 cuplikan [50k,300k] → min 100000, median 150000, max 200000, CUKUP;
+  4 terverifikasi → DATA_KURANG; tanpa link / sumber asing / tanggal kosong / tanggal masa depan / "125rb" → ditolak; link dobel dihitung sekali;
+  6 harga → median bawah; harga_kita 130000 → lebih_murah_dari_kita 2; CLI exit 0/1/2.
+- [ ] Merah → implementasi → hijau. Commit.
+
+### Task 10: Aturan & agent
+- [ ] `brain/aturan-kompetitor.md`; CLAUDE.md (aturan baca-saja + perintah); researcher (bagian riset kompetitor, tools WebSearch, WebFetch, Claude in Chrome);
+  head (syarat RISET→STRATEGI); marketer (pakai kompetitor.md); qc (cek f). Commit.
+
+### Task 11: Uji
+- [ ] Kasus K1–K5 di `tests/kasus-uji.md`; satu riset nyata oleh researcher (proses Claude baru) untuk CONTOH-KOKO-01; cek hasilnya dengan script; catat di `tests/hasil-uji.md`. Commit, push.
