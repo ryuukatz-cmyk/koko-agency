@@ -1,0 +1,87 @@
+{
+  "master": "tests/data/master-CONTOH-KOKO-01.png",
+  "foto": [
+    {
+      "id": "F01",
+      "file": "F01.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 1",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F02",
+      "file": "F02.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 2",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F03",
+      "file": "F03.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 3",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F04",
+      "file": "F04.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 4",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F05",
+      "file": "F05.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 5",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F06",
+      "file": "F06.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 6",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F07",
+      "file": "F07.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 7",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F08",
+      "file": "F08.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 8",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F09",
+      "file": "F09.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 9",
+      "waktu": "2026-11-10T08:00:00"
+    },
+    {
+      "id": "F10",
+      "file": "F10.png",
+      "provider": "uji-palsu",
+      "model": "PIL",
+      "prompt": "scene 10",
+      "waktu": "2026-11-10T08:00:00"
+    }
+  ],
+  "gagal": [],
+  "kurang": []
+}

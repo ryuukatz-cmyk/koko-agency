@@ -1,0 +1,10 @@
+# data mentah (berisi data pembeli) — tidak pernah di-commit
+mentah/
+# video & file besar
+*.mp4
+*.mov
+*.webm
+batch/*/video/
+tests/out/
+__pycache__/
+.env

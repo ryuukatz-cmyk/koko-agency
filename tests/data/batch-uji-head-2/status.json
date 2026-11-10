@@ -1,0 +1,9 @@
+{
+  "batch": "batch-uji-head-2",
+  "sku": "CONTOH-KOKO-01",
+  "status": "APPROVAL_HARGA",
+  "revisi": {},
+  "riwayat": [
+    {"waktu": "2026-11-10T07:59:43Z", "dari": "STRATEGI", "ke": "APPROVAL_HARGA", "oleh": "head", "alasan": "LANJUT: strategi.md + listing.csv ada, harga dihitung ulang head cocok dan LULUS, qc.md LULUS. Menunggu persetujuan pemilik; usulan marketer langsung ke KONTEN_FOTO ditolak (titik manusia tidak boleh dilewati).", "bukti": "harga.py --harga-normal 150000 --hpp 90000 --admin-persen 10 --diskon-persen 20 -> harga_akhir 120000, harga_minimum 100000, margin 18000 (15%), lulus true; HPP 90000 dari brain/produk.csv; admin 10% dari brain/aturan-harga.md; listing.csv harga_akhir 120000 cocok"}
+  ]
+}

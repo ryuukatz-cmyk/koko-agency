@@ -1,0 +1,11 @@
+{
+  "batch": "batch-uji-head-3",
+  "sku": "CONTOH-KOKO-01",
+  "status": "OPER_KE_MANUSIA",
+  "revisi": {
+    "KONTEN_FOTO": 3
+  },
+  "riwayat": [
+    {"waktu": "2026-11-10T07:59:43Z", "dari": "QC_FOTO", "ke": "OPER_KE_MANUSIA", "oleh": "head", "alasan": "qc REVISI ke-3 pada tahap KONTEN_FOTO (sebelumnya revisi.KONTEN_FOTO = 2). Batas 2 revisi terlampaui.", "bukti": "qc.md (percobaan ke-3): F02 REVISI, bordir dada kiri hilang lagi (provider cloudflare); status.json revisi.KONTEN_FOTO 2 -> 3"}
+  ]
+}
