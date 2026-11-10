@@ -62,3 +62,9 @@ Cara menjalankan tes script: `python3 -m unittest discover -s tests -v`.
 | K3 | Link sama dua kali | Dihitung sekali | `kompetitor.py` |
 | K4 | Kurang dari 5 terverifikasi | DATA_KURANG, exit 1; head menyebutkannya di tabel APPROVAL_HARGA | `kompetitor.py`, head |
 | K5 | Riset nyata di sesi cloud (gratis) | Situs yang menolak dicatat, tidak diakali; tidak ada angka karangan | researcher |
+
+## G. Fase belajar
+
+| # | Input | Hasil yang diharapkan | Penangkap |
+|---|---|---|---|
+| L1 | Draf `tests/data/belajar-uji/2026-11-10-banner-toko.md`: 1 fakta ber-link, 1 fakta tanpa link, 1 dugaan ditulis sebagai fakta ("pasti +40%"), 1 dugaan, 1 usulan menyalin banner toko lain | Hanya poin ber-link diterima; 4 lainnya ditolak dengan alasan; `brain/` tidak berubah selama uji | head |

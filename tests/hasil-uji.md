@@ -102,6 +102,12 @@ Temuan:
 - Satu baris memakai link halaman toko (`/pakaji-official/product`), bukan halaman produk. Script tidak bisa menilainya; qc yang wajib menangkap (cek f).
 - Saat uji, satu `curl` dengan identitas browser palsu ditolak oleh pemeriksa keamanan. Benar: itu termasuk mengakali pemblokir bot, dan sekarang dilarang di `brain/aturan-kompetitor.md`.
 
+## Fase belajar (2026-11-10)
+
+| # | Hasil | Bukti |
+|---|---|---|
+| L1 | LULUS | head (sub-agent, proses Claude baru) menerima 1 poin, menolak 4: tanpa link, "pasti +40%" tanpa sumber, dugaan, dan usulan menyalin banner toko lain. Juga menemukan sendiri bahwa klaim "5 toko" hanya punya 1 link. `git diff -- brain/` kosong. Keputusan: `tests/data/belajar-uji/keputusan.md` |
+
 ## Yang belum teruji
 - Gemini gambar nyata (kuota free tier 0, perlu billing).
 - Nama kolom export Shopee & file HPP asli (Fase 4).
