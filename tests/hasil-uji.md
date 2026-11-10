@@ -83,8 +83,14 @@ python3 -m unittest discover -s tests -v     # 56 tes, ~30 dtk
 
 Tidak diperbaiki (kecil): teks `--harga` di video tidak otomatis dicocokkan dengan listing.csv (dicek qc & head), judul prompt `## F01 - studio` tidak dikenali (format ditetapkan di creative.md).
 
+## Uji nyata Cloudflare FLUX (2026-11-10, setelah token dipasang)
+
+- Perintah: `gambar.py --master tests/data/master-CONTOH-KOKO-01.png` dengan 1 prompt.
+- Hasil: Gemini HTTP 429 (tercatat) → **Cloudflare `@cf/black-forest-labs/flux-2-klein-4b` berhasil**, 8 dtk, JPEG 1024×1024, 483 KB, `metadata.json` provider=cloudflare. Exit 0.
+- Penilaian visual (pembanding, bukan putusan qc): warna navy, kerah shanghai, bordir emas dada kiri **terjaga**; tetapi kancing **4, bukan 5**, dan muncul **label putih di leher** yang tidak ada di master → akan **TOLAK** menurut Product Lock.
+- Pelajaran: FLUX menjaga warna & bordir besar, tapi menambah/mengurangi detail kecil. qc wajib menghitung kancing dan mencari tambahan (label, logo, saku).
+
 ## Yang belum teruji
-- Cloudflare nyata (domain diblokir, ACCOUNT_ID belum ada).
 - Gemini gambar nyata (kuota free tier 0, perlu billing).
 - Nama kolom export Shopee & file HPP asli (Fase 4).
 - QC visual pada foto AI sungguhan (data uji berupa gambar sederhana; cacatnya mencolok).
