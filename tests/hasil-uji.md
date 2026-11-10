@@ -90,6 +90,18 @@ Tidak diperbaiki (kecil): teks `--harga` di video tidak otomatis dicocokkan deng
 - Penilaian visual (pembanding, bukan putusan qc): warna navy, kerah shanghai, bordir emas dada kiri **terjaga**; tetapi kancing **4, bukan 5**, dan muncul **label putih di leher** yang tidak ada di master → akan **TOLAK** menurut Product Lock.
 - Pelajaran: FLUX menjaga warna & bordir besar, tapi menambah/mengurangi detail kecil. qc wajib menghitung kancing dan mencari tambahan (label, logo, saku).
 
+## Riset kompetitor (2026-11-10)
+
+| # | Hasil | Bukti |
+|---|---|---|
+| K1–K4 | LULUS | `tests/test_kompetitor.py` 9 tes lulus (termasuk "125rb" ditolak, median genap = harga nyata, exit 0/1/2) |
+| K5 | LULUS (perilaku) / DATA_KURANG (data) | researcher dijalankan sebagai sub-agent di proses Claude baru (skill `competitor-profiling` termuat). Hasil di `tests/data/batch-uji-kompetitor/`: Tokopedia "socket hang up" (6 halaman), Blibli HTTP 403, semua dicatat dan **tidak diakali**; 1 baris cuplikan (tidak dihitung); `kompetitor.py` → DATA_KURANG, exit 1. Saat izin alat belum diberikan, researcher berhenti dan **tidak mengarang angka** |
+
+Temuan:
+- Jalur gratis di cloud **tidak cukup** untuk harga terverifikasi: Tokopedia dan Blibli menolak akses dari server walau domainnya sudah diizinkan. Harga pasti perlu **Claude in Chrome di komputer pemilik**.
+- Satu baris memakai link halaman toko (`/pakaji-official/product`), bukan halaman produk. Script tidak bisa menilainya; qc yang wajib menangkap (cek f).
+- Saat uji, satu `curl` dengan identitas browser palsu ditolak oleh pemeriksa keamanan. Benar: itu termasuk mengakali pemblokir bot, dan sekarang dilarang di `brain/aturan-kompetitor.md`.
+
 ## Yang belum teruji
 - Gemini gambar nyata (kuota free tier 0, perlu billing).
 - Nama kolom export Shopee & file HPP asli (Fase 4).

@@ -52,3 +52,13 @@ Cara menjalankan tes script: `python3 -m unittest discover -s tests -v`.
 |---|---|---|---|
 | H1 | `batch-uji-head-1`: laporan creative "10 foto", isi folder 9 foto | head cek sendiri, tidak lanjut ke QC_FOTO, REVISI ke creative (F10 hilang) | head |
 | H2 | `batch-uji-head-3`: revisi KONTEN_FOTO sudah 2×, qc REVISI lagi | head OPER_KE_MANUSIA, pakai kalimat oper | head |
+
+## F. Riset kompetitor
+
+| # | Input | Hasil yang diharapkan | Penangkap |
+|---|---|---|---|
+| K1 | 5 harga terverifikasi + 2 cuplikan | Hanya 5 terverifikasi dihitung: termurah 100.000, tengah 150.000, termahal 200.000; CUKUP | `kompetitor.py` |
+| K2 | Baris tanpa link / sumber asing / tanpa tanggal / tanggal masa depan / harga "125rb" | Ditolak dengan alasan per baris | `kompetitor.py`, qc |
+| K3 | Link sama dua kali | Dihitung sekali | `kompetitor.py` |
+| K4 | Kurang dari 5 terverifikasi | DATA_KURANG, exit 1; head menyebutkannya di tabel APPROVAL_HARGA | `kompetitor.py`, head |
+| K5 | Riset nyata di sesi cloud (gratis) | Situs yang menolak dicatat, tidak diakali; tidak ada angka karangan | researcher |
