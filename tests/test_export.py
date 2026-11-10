@@ -24,6 +24,20 @@ class TestAngka(unittest.TestCase):
         self.assertEqual(angka("125.000,00"), 125000)
         self.assertEqual(angka("7"), 7)
 
+    def test_koma_ribuan_bukan_desimal(self):
+        self.assertEqual(angka("90,000"), 90000)
+        self.assertEqual(angka("1,250,000"), 1250000)
+        self.assertEqual(angka("1,250,000.00"), 1250000)
+
+    def test_angka_dari_xlsx_tetap_angka(self):
+        self.assertEqual(angka(83333.33333333333), 83333)
+        self.assertEqual(angka(90000), 90000)
+        self.assertEqual(angka("83333.3333"), 83333)
+
+    def test_angka_ambigu_ditolak(self):
+        with self.assertRaises(ValueError):
+            angka("1.25.0")
+
     def test_kosong_tetap_kosong(self):
         self.assertIsNone(angka(""))
         self.assertIsNone(angka(None))
@@ -80,6 +94,20 @@ class TestRingkas(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertIn("SKU_DOBEL", rows[0]["catatan"])
 
+    def test_tanggal_tanpa_nol_depan_terbaca(self):
+        rows = ringkas_per_sku([pesanan("A", "1/11/2026 10:00"), pesanan("A", "2026/05/01 10:00")],
+                               [stok("A", 10)], [], HARI_INI)
+        self.assertEqual(rows[0]["terakhir_terjual"], "2026-11-01")
+
+    def test_tanggal_tidak_terbaca_ditolak_bukan_dilewati(self):
+        with self.assertRaisesRegex(ValueError, "tanggal"):
+            ringkas_per_sku([pesanan("A", "kemarin sore")], [stok("A", 10)], [], HARI_INI)
+
+    def test_sku_beda_huruf_dianggap_sama(self):
+        rows = ringkas_per_sku([pesanan("koko-a ", "2026-11-01 10:00")], [stok("KOKO-A", 10)],
+                               [{"SKU": "Koko-A", "HPP": "90.000"}], HARI_INI)
+        self.assertEqual((rows[0]["unit_terjual"], rows[0]["hpp"]), (1, 90000))
+
     def test_kolom_wajib_hilang_menyebut_namanya(self):
         with self.assertRaisesRegex(ValueError, "Stok"):
             ringkas_per_sku([], [{"SKU": "A", "Nama Produk": "K", "Harga": "1"}], [], HARI_INI)
@@ -96,7 +124,7 @@ class TestBacaTabel(unittest.TestCase):
         wb = openpyxl.Workbook(); ws = wb.active
         ws.append(["SKU", "Stok"]); ws.append(["A", 5])
         p = tempfile.mktemp(suffix=".xlsx"); wb.save(p)
-        self.assertEqual(baca_tabel(p), [{"SKU": "A", "Stok": "5"}])
+        self.assertEqual(baca_tabel(p), [{"SKU": "A", "Stok": 5}])
 
 
 if __name__ == "__main__":

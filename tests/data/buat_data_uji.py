@@ -46,7 +46,7 @@ def tulis(path, kolom, rows):
 
 
 def export_palsu():
-    m = D / "mentah"; m.mkdir(exist_ok=True)
+    m = D / "export-palsu"; m.mkdir(exist_ok=True)
     pembeli = ["budi_palsu", "Budi Palsu", "081200000000", "Jl. Karangan No. 1", "Kota Fiktif", "Provinsi Fiktif", "00000", "tolong cepat"]
     kolom = ["No. Pesanan", "Status Pesanan", "Waktu Pesanan Dibuat", "Nomor Referensi SKU", "Nama Produk", "Jumlah",
              "Harga Setelah Diskon", "Username (Pembeli)", "Nama Penerima", "No. Telepon", "Alamat Pengiriman",
@@ -111,10 +111,13 @@ def main():
     # video final: batch lulus = slideshow; batch cacat = dari klip Flow (berisi V05 produk lain)
     sys.path.insert(0, str(D.parent.parent / "scripts"))
     import video
-    for b, harga, fl in ((b1, h1, None), (b2, h2, flow)):
-        out = b / "video" / "final" / f"{b.name}_FINAL.mp4"
-        r = video.buat(b / "foto", fl, "Koko Navy Bordir", f"Rp {harga:,}".replace(",", "."), out)
-        print(b.name, json.dumps(r))
+    out1 = b1 / "video" / "final" / f"{b1.name}_FINAL.mp4"
+    print(b1.name, json.dumps(video.buat(sorted((b1 / "foto").glob("F*.png")), None, "Koko Navy Bordir",
+                                         f"Rp {h1:,}".replace(",", "."), out1)))
+    # batch cacat: klip sengaja tidak lengkap (V10 hilang) -> dibuat langsung lewat dari_flow tanpa cek pasangan
+    out2 = b2 / "video" / "final" / f"{b2.name}_FINAL.mp4"; out2.parent.mkdir(parents=True, exist_ok=True)
+    video.dari_flow(sorted(flow.glob("V*.mp4")), "Koko Navy Bordir", f"Rp {h2:,}".replace(",", "."), out2)
+    print(b2.name, json.dumps(video.cek(out2)))
 
 
 if __name__ == "__main__":

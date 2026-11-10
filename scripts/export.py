@@ -39,7 +39,8 @@ def baca_tabel(path):
         ws = openpyxl.load_workbook(path, read_only=True, data_only=True).active
         it = ws.iter_rows(values_only=True)
         head = [str(h) if h is not None else "" for h in next(it)]
-        return [{h: ("" if v is None else str(v)) for h, v in zip(head, r)} for r in it
+        # angka dibiarkan angka: mengubahnya ke teks dulu bisa merusak desimal (83333.333 -> 83333333)
+        return [{h: ("" if v is None else v) for h, v in zip(head, r)} for r in it
                 if any(v is not None for v in r)]
     with open(path, newline="", encoding="utf-8-sig") as f:
         return list(csv.DictReader(f))
@@ -50,24 +51,47 @@ def buang_data_pembeli(rows):
 
 
 def angka(s):
-    """'Rp 125.000' / '125.000,00' / '7' -> int. Kosong atau '-' -> None (tidak ditebak)."""
+    """Rupiah/jumlah -> int. 'Rp 125.000', '125.000,00', '90,000', 83333.3 (xlsx) -> int. Kosong/'-' -> None.
+
+    Rupiah tidak punya 3 angka desimal, jadi kelompok 3 digit setelah pemisah = ribuan.
+    Format yang tetap ambigu -> ValueError (tidak ditebak).
+    """
     if s is None:
         return None
-    s = re.sub(r"[^\d,.\-]", "", str(s)).strip()
+    if isinstance(s, (int, float)):
+        return round(s)
+    asli, s = s, re.sub(r"[^\d,.\-]", "", str(s)).strip()
     if s in ("", "-"):
         return None
-    if re.fullmatch(r"-?\d+\.\d{1,2}", s):  # gaya Excel: 125000.0
+    if "," in s and "." in s:  # pemisah yang muncul terakhir = desimal
+        des = "," if s.rfind(",") > s.rfind(".") else "."
+        bulat, pecahan = s.rsplit(des, 1)
+        s = bulat.replace("," if des == "." else ".", "") + "." + pecahan
+    elif "," in s or "." in s:
+        sep = "," if "," in s else "."
+        bagian = s.split(sep)
+        if len(bagian) > 1 and all(len(b) == 3 for b in bagian[1:]) and 1 <= len(bagian[0].lstrip("-")) <= 3:
+            s = "".join(bagian)
+        elif len(bagian) == 2:
+            s = bagian[0] + "." + bagian[1]
+        else:
+            raise ValueError(f"angka ambigu, cek manual: {asli!r}")
+    try:
         return round(float(s))
-    s = s.split(",")[0].replace(".", "")  # gaya Indonesia: titik ribuan, koma desimal
-    return int(s) if s not in ("", "-") else None
+    except ValueError:
+        raise ValueError(f"angka ambigu, cek manual: {asli!r}") from None
 
 
 def _tanggal(s):
-    s = str(s).strip()
-    for f, n in (("%Y-%m-%d", 10), ("%d-%m-%Y", 10), ("%d/%m/%Y", 10)):
+    if isinstance(s, datetime.datetime):
+        return s.date()
+    if isinstance(s, datetime.date):
+        return s
+    bagian = str(s).strip().split()
+    for f in ("%Y-%m-%d", "%Y/%m/%d", "%d-%m-%Y", "%d/%m/%Y"):  # ASUMSI: hari sebelum bulan
         try:
-            return datetime.datetime.strptime(s[:n], f).date()
-        except ValueError:
+            return datetime.datetime.strptime(bagian[0], f).date()
+        except (ValueError, IndexError):
             pass
     return None
 
@@ -90,40 +114,46 @@ def _ambil(rows, jenis):
     return [{i: r.get(a, "") for i, a in peta.items()} for r in rows]
 
 
+def _sku(v):
+    return str(v).strip().upper()
+
+
 def ringkas_per_sku(pesanan, stok, hpp, hari_ini):
     pesanan = _ambil(buang_data_pembeli(pesanan), "pesanan")
     stok = _ambil(buang_data_pembeli(stok), "stok")
     hpp = _ambil(hpp, "hpp")
 
+    rusak = [p["tanggal"] for p in pesanan if not _tanggal(p["tanggal"])]
+    if rusak:  # pesanan yang dilewati diam-diam bisa membuat SKU laku tampak deadstock
+        raise ValueError(f"{len(rusak)} baris pesanan dengan tanggal tidak terbaca, contoh: {rusak[:3]}")
     terjual, terakhir, tgl_semua = {}, {}, []
     for p in pesanan:
         t = _tanggal(p["tanggal"])
-        if t:
-            tgl_semua.append(t)
-        if "batal" in p.get("status", "").lower() or not t:
+        tgl_semua.append(t)
+        if "batal" in str(p.get("status", "")).lower():
             continue
-        sku = p["sku"].strip()
+        sku = _sku(p["sku"])
         terjual[sku] = terjual.get(sku, 0) + (angka(p["jumlah"]) or 0)
         terakhir[sku] = max(terakhir.get(sku, t), t)
     awal_data = min(tgl_semua) if tgl_semua else None
 
     peta_hpp, hpp_dobel = {}, set()
     for h in hpp:
-        sku, nilai = h["sku"].strip(), angka(h["hpp"])
+        sku, nilai = _sku(h["sku"]), angka(h["hpp"])
         if sku in peta_hpp and peta_hpp[sku] != nilai:
             hpp_dobel.add(sku)
         peta_hpp[sku] = nilai
 
     hasil = {}
     for s in stok:
-        sku = s["sku"].strip()
+        sku = _sku(s["sku"])
         if not sku:
             continue
         if sku in hasil:  # SKU dobel: dijumlah, tapi ditandai dan tidak diskor sampai manusia cek
             hasil[sku]["stok"] = (hasil[sku]["stok"] or 0) + (angka(s["stok"]) or 0)
             hasil[sku]["_dobel"] = True
             continue
-        hasil[sku] = {"sku": sku, "nama": s["nama"].strip(), "stok": angka(s["stok"]),
+        hasil[sku] = {"sku": sku, "nama": str(s["nama"]).strip(), "stok": angka(s["stok"]),
                       "harga": angka(s["harga"]), "_dobel": False}
 
     out = []

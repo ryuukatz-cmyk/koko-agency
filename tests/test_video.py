@@ -53,12 +53,31 @@ class TestVideo(unittest.TestCase):
         c = video.cek(self.d / "c.mp4")
         self.assertTrue(c["ok"], c)
 
-    def test_klip_flow_terlalu_pendek_pakai_slideshow(self):
+    def test_klip_flow_terlalu_pendek_ditolak(self):
         fl = self.d / "flow"; fl.mkdir()
         klip(fl / "V01.mp4", 3)
-        hasil = video.buat(foto(self.d, 2), fl, "Koko", "Rp 1", self.d / "d.mp4")
-        self.assertEqual(hasil["mode"], "slideshow")
-        self.assertIn("pendek", hasil["catatan"])
+        with self.assertRaisesRegex(ValueError, "pendek"):
+            video.buat(foto(self.d, 1), fl, "Koko", "Rp 1", self.d / "d.mp4")
+
+    def test_klip_flow_tidak_berpasangan_ditolak(self):
+        fl = self.d / "flow"; fl.mkdir()
+        for i in (1, 2):
+            klip(fl / f"V{i:02d}.mp4", 8)
+        with self.assertRaisesRegex(ValueError, "F03"):
+            video.buat(foto(self.d, 3), fl, "Koko", "Rp 1", self.d / "f.mp4")
+
+    def test_folder_foto_ditolak_harus_daftar_lulus(self):
+        foto(self.d, 2)
+        with self.assertRaisesRegex(ValueError, "LULUS"):
+            video.buat(self.d, None, "Koko", "Rp 1", self.d / "g.mp4")
+
+    def test_cek_video_beraudio_tidak_ok(self):
+        p = self.d / "audio.mp4"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "color=c=white:s=1080x1920:d=16:r=30",
+                        "-f", "lavfi", "-i", "sine=d=16", "-shortest", "-pix_fmt", "yuv420p", str(p)], check=True)
+        c = video.cek(p)
+        self.assertTrue(c["ada_audio"])
+        self.assertFalse(c["ok"])
 
     def test_cek_file_rusak(self):
         rusak = self.d / "rusak.mp4"

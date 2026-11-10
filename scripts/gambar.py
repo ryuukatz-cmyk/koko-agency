@@ -17,13 +17,16 @@ AKUN_CF_FILE = pathlib.Path(__file__).resolve().parent.parent / "config" / "clou
 
 
 class Gagal(Exception):
-    pass
+    """fatal=True: masalah tingkat akun/model (kuota, izin) -> provider dilewati untuk sisa batch."""
+    def __init__(self, pesan, fatal=False):
+        super().__init__(pesan)
+        self.fatal = fatal
 
 
 def _post(args):
     """Satu-satunya pemanggil jaringan (di-mock di tes). Mengembalikan (kode_http, isi)."""
     with tempfile.NamedTemporaryFile() as out:
-        r = subprocess.run(["curl", "-sS", "--max-time", "180", "-o", out.name, "-w", "%{http_code}"] + args,
+        r = subprocess.run(["curl", "-q", "-sS", "--max-time", "180", "-o", out.name, "-w", "%{http_code}"] + args,
                            capture_output=True, text=True)
         isi = pathlib.Path(out.name).read_bytes()
     if r.returncode != 0:
@@ -47,17 +50,18 @@ def kecilkan(master, out, sisi=511):
 
 def _cek(kode, isi, nama):
     if kode != 200:
-        raise Gagal(f"{nama} HTTP {kode}: {isi[:300].decode('utf-8', 'replace')}")
+        raise Gagal(f"{nama} HTTP {kode}: {isi[:300].decode('utf-8', 'replace')}", fatal=kode in (401, 402, 403, 404, 429))
 
 
 def _gemini_model():
     kode, isi = _post(["-X", "GET", f"{GEMINI}/models?pageSize=200"])
     _cek(kode, isi, "gemini daftar model")
     ada = {m["name"].removeprefix("models/") for m in json.loads(isi).get("models", [])}
-    for m in GEMINI_PILIHAN:
-        if m in ada:
-            return m
-    raise Gagal(f"tidak ada model gambar Gemini yang dikenal di daftar model: {sorted(x for x in ada if 'image' in x)}")
+    for m in GEMINI_PILIHAN:  # nama persis dulu, lalu varian (mis. -preview)
+        cocok = [m] if m in ada else sorted(x for x in ada if x.startswith(m))
+        if cocok:
+            return cocok[0]
+    raise Gagal(f"tidak ada model gambar Gemini yang dikenal di daftar model: {sorted(x for x in ada if 'image' in x)}", fatal=True)
 
 
 def _gemini(model, master, prompt, kerja):
@@ -81,7 +85,7 @@ def _akun_cf(akun_cf_file):
     if not akun and pathlib.Path(akun_cf_file).exists():
         akun = pathlib.Path(akun_cf_file).read_text().strip()
     if not akun:
-        raise Gagal("cloudflare dilewati: CF_ACCOUNT_ID / config/cloudflare-account-id.txt tidak ada")
+        raise Gagal("cloudflare dilewati: CF_ACCOUNT_ID / config/cloudflare-account-id.txt tidak ada", fatal=True)
     return akun
 
 
@@ -98,6 +102,13 @@ def _cloudflare(akun, kecil, prompt, ukuran):
     return base64.b64decode(j["result"]["image"])
 
 
+def _jenis_gambar(data):
+    for awal, ext in ((b"\x89PNG", "png"), (b"\xff\xd8\xff", "jpg"), (b"RIFF", "webp")):
+        if data[:len(awal)] == awal:
+            return ext
+    raise Gagal("jawaban bukan file gambar")
+
+
 def buat(master, batch, akun_cf_file=AKUN_CF_FILE, ukuran=1024):
     batch = pathlib.Path(batch)
     if not pathlib.Path(master).is_file():
@@ -107,6 +118,9 @@ def buat(master, batch, akun_cf_file=AKUN_CF_FILE, ukuran=1024):
         raise Gagal("prompt-foto.md kosong atau tanpa blok '## Fxx'")
     foto = batch / "foto"
     foto.mkdir(parents=True, exist_ok=True)
+    for fid in prompts:  # foto lama dari percobaan sebelumnya tidak boleh ikut terpakai
+        for lama in foto.glob(f"{fid}.*"):
+            lama.unlink()
     meta = {"master": str(master), "foto": [], "gagal": []}
     kerja = pathlib.Path(tempfile.mkdtemp())
 
@@ -126,16 +140,18 @@ def buat(master, batch, akun_cf_file=AKUN_CF_FILE, ukuran=1024):
 
     kurang = []
     for fid, prompt in prompts.items():
-        while provider:
-            nama, model, fn = provider[0]
+        for p in list(provider):
+            nama, model, fn = p
             try:
                 data = fn(prompt)
-            except (Gagal, KeyError, IndexError, ValueError) as e:
+                ext = _jenis_gambar(data)
+            except (Gagal, KeyError, IndexError, ValueError, TypeError, AttributeError) as e:
                 meta["gagal"].append({"id": fid, "provider": nama, "alasan": str(e)[:400]})
-                provider.pop(0)
+                if getattr(e, "fatal", False):
+                    provider.remove(p)
                 continue
-            (foto / f"{fid}.png").write_bytes(data)
-            meta["foto"].append({"id": fid, "file": f"{fid}.png", "provider": nama, "model": model,
+            (foto / f"{fid}.{ext}").write_bytes(data)
+            meta["foto"].append({"id": fid, "file": f"{fid}.{ext}", "provider": nama, "model": model,
                                  "prompt": prompt, "waktu": datetime.datetime.now().isoformat(timespec="seconds")})
             break
         else:

@@ -64,6 +64,50 @@ class TestGambar(unittest.TestCase):
         self.assertEqual(palsu.hitung(":generateContent"), 1)
         self.assertIn("accounts/akun123/ai/run/@cf/black-forest-labs/flux-2-klein-4b", palsu.panggilan[-1][-1])
 
+    def test_gagal_sementara_tidak_membuang_provider(self):
+        ok = json.dumps({"candidates": [{"content": {"parts": [{"inlineData": {"mimeType": "image/png", "data": base64.b64encode(PNG).decode()}}]}}]}).encode()
+        palsu = Palsu(gemini=(200, ok))
+        jawab = iter([(503, b"sibuk"), (200, ok), (200, ok)])
+        asli = palsu.__call__
+        gambar._post = lambda a: next(jawab) if ":generateContent" in a[-1] else asli(a)
+        d = siapkan(2)
+        hasil = gambar.buat(d / "master.png", d)
+        # F01: 503 lalu tidak ada provider lain -> kurang; F02 tetap dicoba Gemini
+        self.assertEqual(hasil["kurang"], ["F01"])
+        self.assertEqual(hasil["dibuat"], ["F02"])
+
+    def test_model_preview_tetap_dikenali(self):
+        gambar._post = lambda a: (200, json.dumps({"models": [{"name": "models/gemini-3.1-flash-image-preview"}]}).encode())
+        self.assertEqual(gambar._gemini_model(), "gemini-3.1-flash-image-preview")
+
+    def test_jawaban_aneh_tidak_membuat_crash(self):
+        os.environ["CF_ACCOUNT_ID"] = "akun123"
+        gambar._post = Palsu(cf=(200, b'{"success": true, "result": null}'))
+        d = siapkan(1)
+        self.assertEqual(gambar.buat(d / "master.png", d)["status"], "WAITING_FOTO")
+
+    def test_foto_lama_dibersihkan_sebelum_buat_ulang(self):
+        gambar._post = Palsu()
+        d = siapkan(1)
+        (d / "foto").mkdir(); (d / "foto" / "F01.png").write_bytes(b"lama")
+        gambar.buat(d / "master.png", d, akun_cf_file=d / "x.txt")
+        self.assertFalse((d / "foto" / "F01.png").exists())
+
+    def test_curl_tidak_membaca_curlrc(self):
+        import subprocess as sp
+        tangkap = {}
+        asli = sp.run
+        def run(args, **kw):
+            tangkap["args"] = args
+            raise RuntimeError("berhenti")
+        gambar.subprocess.run = run
+        try:
+            with self.assertRaises(RuntimeError):
+                self._asli(["https://x"])
+        finally:
+            gambar.subprocess.run = asli
+        self.assertEqual(tangkap["args"][:2], ["curl", "-q"])
+
     def test_tanpa_akun_cloudflare_jatuh_ke_manual(self):
         gambar._post = Palsu()
         d = siapkan(10)

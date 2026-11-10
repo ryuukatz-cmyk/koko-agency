@@ -28,6 +28,8 @@ def hitung(harga_normal, hpp, admin_persen, diskon_persen=0, voucher_rp=0):
         raise ValueError("voucher_rp tidak boleh negatif")
     # harga dibulatkan ke bawah: pembeli tidak pernah membayar lebih dari hitungan
     akhir = math.floor(Fraction(harga_normal) * (1 - Fraction(str(diskon_persen)) / 100)) - voucher_rp
+    if akhir <= 0:
+        raise ValueError(f"harga akhir {akhir} <= 0: voucher/diskon terlalu besar")
     admin = round(Fraction(akhir) * _persen(admin_persen, "admin_persen"))
     bersih = akhir - admin
     return {
@@ -47,7 +49,11 @@ def main(argv=None):
     a.add_argument("--diskon-persen", type=float, default=0)
     a.add_argument("--voucher-rp", type=int, default=0)
     x = a.parse_args(argv)
-    r = hitung(x.harga_normal, x.hpp, x.admin_persen, x.diskon_persen, x.voucher_rp)
+    try:
+        r = hitung(x.harga_normal, x.hpp, x.admin_persen, x.diskon_persen, x.voucher_rp)
+    except ValueError as e:  # exit 2 = input salah; exit 1 = dihitung tapi TIDAK LULUS
+        print(json.dumps({"error": str(e)}, ensure_ascii=False))
+        return 2
     print(json.dumps(r, ensure_ascii=False))
     return 0 if r["lulus"] else 1
 

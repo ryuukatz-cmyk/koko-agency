@@ -5,12 +5,11 @@ Mode:
 - slideshow : default. Foto yang LULUS QC diberi zoom pelan + transisi fade + teks.
 Teks: nama produk (atas) dan harga akhir yang SUDAH DISETUJUI manusia (bawah).
 """
-import argparse, json, pathlib, subprocess, sys, tempfile
+import argparse, json, pathlib, re, subprocess, sys, tempfile
 
 W, H, FPS = 1080, 1920, 30
 MIN_DTK, MAX_DTK = 15, 30
 TRANSISI = 0.5
-EKSTENSI_FOTO = (".png", ".jpg", ".jpeg", ".webp")
 EKSTENSI_KLIP = (".mp4", ".mov", ".webm", ".m4v")
 
 
@@ -32,7 +31,7 @@ def _teks(nama, harga, kerja):
     (kerja / "nama.txt").write_text(nama, encoding="utf-8")
     (kerja / "harga.txt").write_text(harga, encoding="utf-8")
     f = _font()
-    gaya = f"fontfile='{f}':fontcolor=white:box=1:boxcolor=black@0.55:boxborderw=24:x=(w-text_w)/2"
+    gaya = f"fontfile='{f}':expansion=none:fontcolor=white:box=1:boxcolor=black@0.55:boxborderw=24:x=(w-text_w)/2"
     return (f"drawtext=textfile='{kerja / 'nama.txt'}':{gaya}:fontsize=64:y=220,"
             f"drawtext=textfile='{kerja / 'harga.txt'}':{gaya}:fontsize=96:y=h-420")
 
@@ -95,30 +94,33 @@ def dari_flow(klip, nama, harga, out):
     _jalankan(masuk + ["-filter_complex", ";".join(filt), "-map", "[out]"] + KELUARAN + [str(out)])
 
 
-def _daftar(path_atau_list, ekstensi, awalan):
-    if isinstance(path_atau_list, (list, tuple)):
-        return [pathlib.Path(p) for p in path_atau_list]
-    p = pathlib.Path(path_atau_list)
-    return sorted(f for f in p.iterdir() if f.suffix.lower() in ekstensi and f.name.upper().startswith(awalan)) if p.is_dir() else [p]
+def _nomor(path, awalan):
+    m = re.fullmatch(awalan + r"(\d{2})", pathlib.Path(path).stem.upper())
+    return m.group(1) if m else None
 
 
 def buat(fotos, flow_dir, nama, harga, out):
+    """fotos = daftar file foto yang LULUS QC (bukan folder: folder bisa berisi foto yang ditolak)."""
+    if not isinstance(fotos, (list, tuple)):
+        raise ValueError("berikan daftar file foto yang LULUS QC, bukan folder")
+    fotos = [pathlib.Path(f) for f in fotos]
+    if not fotos:
+        raise ValueError("tidak ada foto LULUS untuk video")
     out = pathlib.Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    catatan = ""
-    klip = _daftar(flow_dir, EKSTENSI_KLIP, "V") if flow_dir and pathlib.Path(flow_dir).is_dir() else []
-    if klip:
-        try:
-            dari_flow(klip, nama, harga, out)
-            return {"mode": "flow", "klip": [k.name for k in klip], "catatan": "", "cek": cek(out)}
-        except ValueError as e:
-            catatan = f"{e}; pakai slideshow"
-    fotos = _daftar(fotos, EKSTENSI_FOTO, "F")
-    if not fotos:
-        raise ValueError("tidak ada foto untuk slideshow")
+    klip = []
+    if flow_dir and pathlib.Path(flow_dir).is_dir():
+        klip = sorted(k for k in pathlib.Path(flow_dir).iterdir()
+                      if k.suffix.lower() in EKSTENSI_KLIP and _nomor(k, "V"))
+    if klip:  # klip ada: harus berpasangan 1:1 dengan foto LULUS (F01 <-> V01), kalau tidak head yang memutuskan
+        nf, nv = {_nomor(f, "F") for f in fotos}, {_nomor(k, "V") for k in klip}
+        if nf != nv:
+            raise ValueError(f"klip Flow tidak berpasangan 1:1. Foto tanpa klip: {sorted('F' + n for n in nf - nv)}; "
+                             f"klip tanpa foto LULUS: {sorted('V' + n for n in nv - nf)}")
+        dari_flow(klip, nama, harga, out)
+        return {"mode": "flow", "klip": [k.name for k in klip], "catatan": "", "cek": cek(out)}
     slideshow(fotos, nama, harga, out)
-    return {"mode": "slideshow", "foto": [f.name for f in fotos], "catatan": catatan or "tidak ada klip Flow",
-            "cek": cek(out)}
+    return {"mode": "slideshow", "foto": [f.name for f in fotos], "catatan": "tidak ada klip Flow", "cek": cek(out)}
 
 
 def cek(path):
@@ -135,13 +137,14 @@ def cek(path):
     hasil = {"lebar": v["width"], "tinggi": v["height"], "durasi": round(dur, 2),
              "ada_audio": any(s["codec_type"] == "audio" for s in j["streams"]),
              "dekode_bersih": dekode.returncode == 0 and not dekode.stderr.strip()}
-    hasil["ok"] = (hasil["lebar"], hasil["tinggi"]) == (W, H) and MIN_DTK <= dur <= MAX_DTK + 0.1 and hasil["dekode_bersih"]
+    hasil["ok"] = ((hasil["lebar"], hasil["tinggi"]) == (W, H) and MIN_DTK <= dur <= MAX_DTK + 0.1
+                   and hasil["dekode_bersih"] and not hasil["ada_audio"])
     return hasil
 
 
 def main(argv=None):
     a = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    a.add_argument("--foto", nargs="+", help="folder foto (F*.png) atau daftar file foto yang LULUS QC")
+    a.add_argument("--foto", nargs="+", help="daftar file foto yang LULUS QC (F01.png F03.png ..)")
     a.add_argument("--flow", help="folder klip Flow (V01.mp4 ..), opsional")
     a.add_argument("--nama", required=True)
     a.add_argument("--harga", required=True, help='harga yang sudah disetujui, mis. "Rp 99.000"')
@@ -151,7 +154,7 @@ def main(argv=None):
     if x.cek:
         h = cek(x.out)
     else:
-        h = buat(x.foto[0] if x.foto and len(x.foto) == 1 else (x.foto or []), x.flow, x.nama, x.harga, x.out)
+        h = buat(x.foto or [], x.flow, x.nama, x.harga, x.out)
     print(json.dumps(h, ensure_ascii=False))
     return 0 if h.get("ok", h.get("cek", {}).get("ok")) else 1
 

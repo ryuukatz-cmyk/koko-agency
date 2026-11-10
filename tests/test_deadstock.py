@@ -36,6 +36,12 @@ class TestDeadstock(unittest.TestCase):
         self.assertEqual(hasil[0]["status"], "DEADSTOCK_DATA_KURANG")
         self.assertIsNone(hasil[0]["skor"])
 
+    def test_tidak_pernah_terjual_perlu_cek_manusia(self):
+        # bisa saja produk baru di-listing; umur sebenarnya tidak diketahui
+        hasil = pilih([r("N", 10, 180, catatan="TIDAK_TERJUAL_SEPANJANG_DATA")])
+        self.assertEqual(hasil[0]["status"], "DEADSTOCK_DATA_KURANG")
+        self.assertIsNone(hasil[0]["skor"])
+
     def test_kosong(self):
         self.assertEqual(pilih([]), [])
 

@@ -2,14 +2,15 @@
 
 Deadstock: hari_tanpa_jual >= 60 dan stok >= 5 (ASUMSI, bisa diubah lewat argumen).
 Skor 0-100 = 50*modal/modal_maks + 30*umur/umur_maks + 20*stok/stok_maks; modal = stok x HPP.
-SKU dengan data kurang (HPP kosong/dobel, SKU dobel) tetap didaftar tapi tidak diskor.
+SKU dengan data kurang (HPP kosong/dobel, SKU dobel, tidak pernah terjual di data) tetap didaftar tapi tidak diskor.
 """
 import argparse, csv, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from export import angka, tulis_csv, KOLOM_OUTPUT
 
-TANDA_DATA_KURANG = ("HPP_KOSONG", "HPP_DOBEL", "SKU_DOBEL", "STOK_KOSONG")
+# TIDAK_TERJUAL_SEPANJANG_DATA: bisa produk baru di-listing, umur sebenarnya belum diketahui -> manusia cek
+TANDA_DATA_KURANG = ("HPP_KOSONG", "HPP_DOBEL", "SKU_DOBEL", "STOK_KOSONG", "TIDAK_TERJUAL_SEPANJANG_DATA")
 
 
 def pilih(rows, min_hari=60, min_stok=5):

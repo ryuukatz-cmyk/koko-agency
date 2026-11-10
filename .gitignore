@@ -1,5 +1,5 @@
 # data mentah (berisi data pembeli) — tidak pernah di-commit
-data/mentah/
+mentah/
 # video & file besar
 *.mp4
 *.mov

@@ -25,6 +25,6 @@ Revisi maksimal 2 kali per tahap, setelah itu OPER KE MANUSIA.
 - Tes: `python3 -m unittest discover -s tests -v`
 - Ringkas export: `python3 scripts/export.py --pesanan .. --stok .. --hpp .. --hari-ini YYYY-MM-DD --out data/ringkas-sku.csv`
 - Deadstock: `python3 scripts/deadstock.py --ringkas data/ringkas-sku.csv --out batch/<id>/riset.csv`
-- Harga: `python3 scripts/harga.py --harga-normal .. --hpp .. --admin-persen 10 [--diskon-persen ..] [--voucher-rp ..]`
+- Harga (exit 0 lulus, 1 TIDAK LULUS, 2 input salah): `python3 scripts/harga.py --harga-normal .. --hpp .. --admin-persen 10 [--diskon-persen ..] [--voucher-rp ..]`
 - Gambar: `python3 scripts/gambar.py --master .. --prompts prompts.txt --batch batch/<id>`
-- Video: `python3 scripts/video.py --foto batch/<id>/foto --nama ".." --harga "Rp .." --out batch/<id>/video/final/<id>_FINAL.mp4 [--flow ..]`
+- Video: `python3 scripts/video.py --foto <file foto LULUS: batch/<id>/foto/F01.png ..> --nama ".." --harga "Rp .." --out batch/<id>/video/final/<id>_FINAL.mp4 [--flow ..]`

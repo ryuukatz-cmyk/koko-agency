@@ -7,9 +7,9 @@ Cara menjalankan tes script: `python3 -m unittest discover -s tests -v`.
 
 | # | Input | Hasil yang diharapkan | Penangkap |
 |---|---|---|---|
-| N1 | `tests/data/mentah/export-pesanan.csv` berisi kolom pembeli palsu (Username, Nama Penerima, No. Telepon, Alamat, Kota, Provinsi, Kode Pos, Catatan) | `export.py` menulis ringkasan per SKU tanpa satu pun isi kolom pembeli | researcher (`export.py`) |
-| N2 | Ringkasan 8 SKU (A..H) | Deadstock: A, B, C (DEADSTOCK), G, H (DATA_KURANG). D, E, F tidak masuk | researcher (`deadstock.py`) |
-| N3 | Deadstock A, B, C | Urutan skor A (90,2) > C (63,3) > B (27,8), cocok dengan hitungan manual | researcher (`deadstock.py`) |
+| N1 | `tests/data/export-palsu/export-pesanan.csv` berisi kolom pembeli palsu (Username, Nama Penerima, No. Telepon, Alamat, Kota, Provinsi, Kode Pos, Catatan) | `export.py` menulis ringkasan per SKU tanpa satu pun isi kolom pembeli | researcher (`export.py`) |
+| N2 | Ringkasan 8 SKU (A..H) | Deadstock: A, B (DEADSTOCK); C (tidak pernah terjual), G, H (DATA_KURANG). D, E, F tidak masuk | researcher (`deadstock.py`) |
+| N3 | Deadstock A, B | Skor A (100,0) > B (32,7), cocok dengan hitungan manual | researcher (`deadstock.py`) |
 | N4 | Harga 150.000, HPP 90.000, admin 10%, diskon 20% | Harga akhir 120.000, minimum 100.000, margin 18.000, lulus | marketer, dicek ulang qc (`harga.py`) |
 | N5 | Bundling A+F: harga 290.000, HPP 170.000, diskon 25% | Harga akhir 217.500 ≥ minimum 188.889, lulus | marketer (`harga.py`) |
 | N6 | Diskon 10% + voucher toko Rp 5.000 | Harga akhir 130.000, lulus | marketer (`harga.py`) |

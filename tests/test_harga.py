@@ -39,6 +39,17 @@ class TestHarga(unittest.TestCase):
             with self.assertRaises(ValueError):
                 hitung(150000, 90000, 10, diskon_persen=d)
 
+    def test_voucher_melebihi_harga_ditolak(self):
+        with self.assertRaises(ValueError):
+            hitung(50000, 30000, 10, voucher_rp=60000)
+
+    def test_cli_error_input_exit_2_beda_dengan_tidak_lulus(self):
+        import subprocess
+        skrip = str(pathlib.Path(__file__).resolve().parent.parent / "scripts" / "harga.py")
+        jalan = lambda *a: subprocess.run([sys.executable, skrip, "--harga-normal", "150000", "--admin-persen", "10", *a], capture_output=True).returncode
+        self.assertEqual(jalan("--hpp", "90000", "--diskon-persen", "35"), 1)
+        self.assertEqual(jalan("--hpp", "0"), 2)
+
     def test_admin_100_persen_ditolak(self):
         with self.assertRaises(ValueError):
             harga_minimum(90000, 100)

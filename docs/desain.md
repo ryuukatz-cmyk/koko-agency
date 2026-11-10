@@ -95,13 +95,14 @@ NEW → RISET → STRATEGI → APPROVAL_HARGA (manusia)
 2. **Cloudflare Workers AI** `@cf/black-forest-labs/flux-2-klein-4b`: multipart `prompt`, `input_image_0` (master dikecilkan < 512×512), `width`, `height`. Akun dari env `CF_ACCOUNT_ID` atau `config/cloudflare-account-id.txt`; kalau tidak ada → lewati. Token dipasang proxy.
 3. **Manual**: tulis 10 prompt ke `batch/<id>/prompt-foto.md`, status WAITING_FOTO. Pemilik generate sendiri (Flow / aplikasi Gemini) dan menaruh hasil di Drive `Koko Agency/output/<batch>/foto/`.
 
+Provider hanya dilewati untuk sisa batch bila gagal tingkat akun (HTTP 401/402/403/404/429, model tidak ada, akun tidak diatur). Gagal sementara (5xx, timeout, jawaban tanpa gambar) hanya berlaku untuk foto itu.
 Setiap foto punya catatan di `foto/metadata.json`: id, provider, model, prompt, waktu. Percobaan yang gagal juga dicatat.
 QC Product Lock wajib untuk semua provider; FLUX rawan kehilangan bordir/logo → QC ketat.
 
 ### Video — `scripts/video.py`
 
 1. **Default (otomatis, gratis):** slideshow ffmpeg dari foto LULUS QC: zoom pelan, transisi fade, teks nama produk + harga akhir yang **sudah disetujui**, tanpa musik, 1080×1920, 15–30 detik.
-2. **Opsional:** kalau ada klip Flow di Drive `.../<batch>/flow/`, ffmpeg memotong, menggabung, dan memberi teks harga. Kalau tidak ada klip → otomatis pakai slideshow.
+2. **Opsional:** kalau ada klip Flow di Drive `.../<batch>/flow/`, ffmpeg memotong, menggabung, dan memberi teks harga. Kalau tidak ada klip → otomatis pakai slideshow. Klip yang tidak berpasangan 1:1 dengan foto LULUS, rusak, atau total < 15 dtk → script berhenti dan head memutuskan (perbaikan setelah code review).
 
 Output: satu video final per batch (`video/final/<batch>_FINAL.mp4`). Kalau Flow dipakai, klip harus berpasangan 1:1: `F01 ↔ P01 ↔ V01`.
 
@@ -115,6 +116,7 @@ Output: satu video final per batch (`video/final/<batch>_FINAL.mp4`). Kalau Flow
 Skor prioritas (0–100), hanya untuk SKU yang lolos aturan deadstock dan datanya lengkap:
 `skor = 50·modal/modal_maks + 30·umur/umur_maks + 20·stok/stok_maks`, modal = stok × HPP.
 HPP kosong → ditandai `HPP_KOSONG`, tidak diberi skor. SKU dobel → `SKU_DOBEL`, tidak diberi skor sampai manusia memilih.
+Tidak pernah terjual di data → `TIDAK_TERJUAL_SEPANJANG_DATA`, tidak diberi skor (bisa produk baru; manusia cek tanggal listing).
 
 ## 11. Struktur repo
 
