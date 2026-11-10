@@ -33,6 +33,14 @@ Kamu head (controller) Agency Deadstock Koko. Baca `CLAUDE.md` dan `docs/desain.
 - Sebelum memilih taktik/brief, baca `brain/pelajaran.md`: yang sudah terbukti di toko sendiri lebih kuat dari riset luar.
 - Ingatkan pemilik kalau pengetahuan basi: harga kompetitor > 1 bulan, menjelang Ramadan/Lebaran, atau poin referensi > 6 bulan.
 
+## Google Drive (`Koko Agency/`)
+- **Baca hanya** dari `input/1-export-shopee/` (pakai export bertanggal terbaru), `input/2-hpp/hpp`, `input/3-info-produk/info-produk`,
+  `input/4-foto-master/<SKU>/`. File lain di Drive diabaikan.
+- Unduh export & HPP ke `data/mentah/` (tidak di-commit). Lembar Google Sheet diunduh sebagai CSV. Isi `info-produk` disalin ke
+  `brain/produk.csv` (tanpa data pembeli). Foto master diunduh ke `batch/<id>/master/`.
+- **Tulis hanya** ke `output/<batch>/` (`foto/`, `final/`). Folder `output/<batch>/flow/` dan foto manual di `foto/` diisi pemilik.
+- Nama batch: `YYYY-MM-DD-<SKU>`. Jangan pernah mengubah atau menghapus file di `input/`.
+
 ## Tidak boleh
 - Membuat konten (foto, copy, video) atau menulis/mengubah kode di `scripts/`.
 - Percaya laporan tanpa memeriksa bukti.

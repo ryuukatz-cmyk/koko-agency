@@ -16,12 +16,35 @@ Kamu tetap bosnya: kamu yang menyetujui harga dan menyetujui hasil akhir.
 2. **Komputermu** (aplikasi Claude Desktop + ekstensi Claude in Chrome): untuk riset yang perlu membuka Shopee, Pinterest, IG, dan toko lain.
    Setelah selesai, hasilnya disimpan (commit) ke GitHub supaya bisa dipakai di cloud.
 
+## Folder Google Drive (jangan dicampur)
+Aturan gampangnya: **kamu mengisi `input/`, agent mengisi `output/`.** Agent hanya membaca folder bernomor; file lain di luar itu diabaikan.
+
+```
+Koko Agency/
+├── input/                      ← KAMU yang isi
+│   ├── 1-export-shopee/        export pesanan + export stok dari Seller Centre (file asli, jangan diedit)
+│   ├── 2-hpp/hpp               satu lembar: SKU | HPP  (angka polos, mis. 90000)
+│   ├── 3-info-produk/info-produk   satu lembar: SKU | nama | warna | ukuran | bahan | fakta_boleh_diklaim | catatan
+│   └── 4-foto-master/<SKU>/    satu folder per SKU, nama folder = SKU persis
+└── output/                     ← AGENT yang isi
+    └── <batch>/                mis. 2026-11-15-KOKO-A
+        ├── foto/               10 foto hasil agent (kalau FLUX gagal, KAMU taruh foto buatanmu di sini)
+        ├── flow/               (opsional) klip Google Flow buatanmu: V01.mp4, V02.mp4 …
+        └── final/              video final, listing.csv, checklist upload
+```
+
+**Isi tiap folder**
+| Folder | Isi | Nama file | Catatan |
+|---|---|---|---|
+| `1-export-shopee` | Export **pesanan** minimal 90 hari terakhir + export **stok/produk** | `pesanan-YYYY-MM-DD.xlsx`, `stok-YYYY-MM-DD.xlsx` (tanggal export) | Kolom pesanan: `Nomor Referensi SKU`, `Waktu Pesanan Dibuat`, `Jumlah`, `Status Pesanan`. Kolom stok: `SKU`, `Nama Produk`, `Stok`, `Harga`. Data pembeli di dalamnya dibuang otomatis, tidak pernah disimpan agent. |
+| `2-hpp` | Lembar `hpp` (sudah disiapkan) | — | Satu baris per SKU. SKU harus sama persis dengan di Shopee. HPP kosong = SKU itu tidak diproses harganya. |
+| `3-info-produk` | Lembar `info-produk` (sudah disiapkan) | — | `fakta_boleh_diklaim` = hal yang **benar** tentang produk, pisahkan dengan `;` (mis. `katun;bordir dada kiri;kerah shanghai`). Agent tidak boleh menulis klaim di luar kolom ini. |
+| `4-foto-master/<SKU>/` | 1–3 foto asli produk | `depan.jpg` (wajib), `detail-bordir.jpg`, `belakang.jpg` | Tajam, cahaya terang, produk penuh terlihat, latar polos. Foto buram akan ditolak qc. |
+
+File lama tidak perlu dihapus; agent memakai export dengan tanggal **terbaru**.
+
 ## Cara memulai batch baru
-1. Taruh bahan di Google Drive `Koko Agency/input/`:
-   - export pesanan Shopee (kolom: `Nomor Referensi SKU`, `Waktu Pesanan Dibuat`, `Jumlah`, `Status Pesanan`)
-   - export stok (kolom: `SKU`, `Nama Produk`, `Stok`, `Harga`)
-   - file HPP (kolom: `SKU`, `HPP`, tulis angka polos seperti `90000`)
-   - foto master produk yang tajam (kerah, kancing, bordir terlihat jelas)
+1. Isi folder `input/` seperti tabel di atas.
 2. Buka sesi baru di cloud dan tulis: **"head, mulai batch baru dari bahan di Drive."**
 
 ## Kapan kamu dipanggil
