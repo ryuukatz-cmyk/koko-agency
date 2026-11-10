@@ -2,6 +2,10 @@
   "batch": "batch-uji-head-1",
   "sku": "CONTOH-KOKO-01",
   "status": "KONTEN_FOTO",
-  "revisi": {},
-  "riwayat": []
+  "revisi": {
+    "KONTEN_FOTO": 1
+  },
+  "riwayat": [
+    {"waktu": "2026-11-10T07:59:43Z", "dari": "KONTEN_FOTO", "ke": "KONTEN_FOTO", "oleh": "head", "alasan": "REVISI (revisi ke-1): laporan creative klaim 10 foto F01-F10, bukti tidak cocok. Syarat ke QC_FOTO belum terpenuhi.", "bukti": "ls foto/: 9 file (F01-F09), F10 tidak ada; semua 7365-9656 byte (< 10 KB); foto/metadata.json tidak ada. PNG valid 1024x1024."}
+  ]
 }

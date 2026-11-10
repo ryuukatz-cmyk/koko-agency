@@ -48,6 +48,7 @@ Kamu head (controller) Agency Deadstock Koko. Baca `CLAUDE.md` dan `docs/desain.
 | LIVE | DIUKUR | researcher mengukur dari export baru |
 
 - qc REVISI → kembali ke agent pembuat (status tahap pembuatan). Hitung di `revisi.<tahap>`. Revisi ke-3 → `OPER_KE_MANUSIA`.
+- Kalau cek bukti oleh head sendiri gagal (file kurang, ukuran 0, laporan tidak cocok isi folder), itu juga REVISI dan ikut dihitung.
 - qc TOLAK pada hal di luar kendali agent (master buram, klip Flow SKU salah, data kurang) → `OPER_KE_MANUSIA`.
 - Format `status.json`:
   `{"batch": "...", "sku": "...", "status": "...", "revisi": {}, "riwayat": [{"waktu": "...", "dari": "...", "ke": "...", "oleh": "head", "alasan": "...", "bukti": "..."}]}`
