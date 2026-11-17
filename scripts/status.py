@@ -15,8 +15,9 @@ MENUNGGU_PEMILIK = {
     "WAITING_LATAR": "buat latar dekorasi manual atau izinkan latar warna palet",
     "APPROVAL_DEKORASI": "lihat banner/etalase lalu setujui",
     "APPROVAL_IKLAN": "setujui rencana iklan, lalu pasang & bayar sendiri di dashboard iklan",
+    "APPROVAL_KONTEN": "setujui kalender konten, lalu posting/jadwalkan sendiri",
 }
-SELESAI = {"LIVE", "DIUKUR", "DIPASANG", "STOP"}
+SELESAI = {"LIVE", "DIUKUR", "DIPASANG", "DIJADWALKAN", "STOP"}
 
 
 def baca(akar):

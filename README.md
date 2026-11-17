@@ -52,7 +52,8 @@ File lama tidak perlu dihapus; agent memakai export dengan tanggal **terbaru**.
 | Alat | Untuk | Cara |
 |---|---|---|
 | Google Drive (connector claude.ai) | head membaca `input/` dan menulis `output/` | claude.ai → Settings → Connectors → Google Drive |
-| Claude in Chrome (ekstensi, di komputermu) | riset Shopee/TikTok/Pinterest, saran kata kunci, cek ukuran di Seller Centre | pasang ekstensi, jalankan riset dari aplikasi desktop |
+| Claude in Chrome (ekstensi, di komputermu) | riset Shopee/TikTok/Pinterest, saran kata kunci, ulasan, cek ukuran di Seller Centre | pasang ekstensi, jalankan riset dari aplikasi desktop |
+| Karyawan AI (connector, opsional) | TikTok & Meta Ads Library, ide kata kunci Google — jalan dari cloud tanpa Chrome | sambungkan connector-nya di claude.ai; berkuota |
 | Cloudflare Workers AI (token di environment koko) | foto & latar FLUX gratis ±10.000 neurons/hari | network environment izinkan `api.cloudflare.com`, token dipasang sebagai secret proxy |
 | Gemini (opsional, perlu billing) | provider gambar cadangan | key di proxy environment |
 Lalu di sesi cloud jalankan `bash scripts/setup.sh` (cek ffmpeg/Pillow/openpyxl + tes cepat).
@@ -63,6 +64,7 @@ Lalu di sesi cloud jalankan `bash scripts/setup.sh` (cek ffmpeg/Pillow/openpyxl 
 | `/status` | apa yang menunggu keputusanmu |
 | `/batch-baru [SKU]` | mulai 1 SKU sampai tabel persetujuan harga |
 | `/lanjut [batch] [catatan]` | lanjutkan setelah kamu setuju / menaruh file |
+| `/konten [periode] [platform]` | riset konten & iklan kompetitor → kalender konten + naskah (kamu yang posting) |
 | `/dekorasi [kampanye]` | banner carousel, voucher, kategori untuk toko |
 | `/iklan [budget harian]` | rencana iklan dari margin (kamu yang pasang & bayar) |
 | `/ukur [tanggal tayang]` | hasil mingguan dari export pesanan baru |

@@ -47,6 +47,9 @@ h. **Dekorasi** — buka setiap gambar di `hasil/` (Read) dan `laporan.json`. Uk
 i. **Iklan** — jalankan ulang `scripts/iklan.py` dengan input yang sama; angka beda dengan `rencana-iklan.md` = REVISI.
    SKU TIDAK_DIIKLANKAN diusulkan = TOLAK. Budget total melebihi angka pemilik = TOLAK. Kata kunci merek toko lain = TOLAK.
    Kata kunci tanpa sumber di `kata-kunci.csv` = REVISI. Aturan berhenti wajib ada.
+j. **Konten** — jalankan ulang `scripts/cek_konten.py` (dengan `--listing`); exit 1 = REVISI (klaim palsu/harga salah = TOLAK).
+   Setiap pola di `riset-konten.md` yang dipakai punya link + tanggal; naskah/caption tidak menyalin konten kompetitor = cek
+   dengan membuka 2–3 link sumber; aset yang dirujuk ada dan LULUS. Data pribadi pengulas/penonton tertulis = TOLAK.
 
 ## Format qc.md
 ```

@@ -43,6 +43,13 @@ Kamu marketer Koko Agency. Kerjakan hanya yang ada di brief dari head.
 Ikuti skill rencana-iklan-marketplace dan `brain/aturan-iklan.md`. Angka dari `scripts/iklan.py`; budget hanya dari pemilik.
 Output `iklan.csv` + `rencana-iklan.md`. Kamu tidak memasang iklan.
 
+## Kalender konten (batch tingkat toko, status KONTEN_RENCANA)
+Baca `.claude/skills/social/SKILL.md` (+ `references/short-form-video.md`, `platforms.md`) dan `brain/aturan-konten.md`.
+Bahan: `riset-konten.md/.csv` dari researcher, `brain/kalender.md`, listing yang sudah disetujui, foto/video LULUS.
+Output `kalender-konten.csv` (kolom di aturan-konten) untuk 2–4 minggu, satu naskah per baris. Pola dari riset boleh, naskah orang
+lain tidak. Jalankan `python3 scripts/cek_konten.py --kalender .. --produk brain/produk.csv --listing batch/*/listing.csv` sampai exit 0.
+Kamu tidak memposting.
+
 ## Teks dekorasi (kalau head meminta)
 Label/judul/subjudul/CTA banner: pendek, dari fakta produk dan promo yang sudah disetujui. Creative yang merender.
 

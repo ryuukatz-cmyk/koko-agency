@@ -89,7 +89,7 @@ Satu batch = satu SKU, untuk Shopee dan TikTok Shop sekaligus (listing.csv punya
   (batch lama tanpa `mode` = `deadstock`).
 
 ## Batch tingkat toko (bukan per SKU)
-Nama `YYYY-MM-DD-toko-dekorasi` / `YYYY-MM-DD-toko-iklan`; `status.json` sama formatnya, `sku` = `"TOKO"`.
+Nama `YYYY-MM-DD-toko-dekorasi` / `YYYY-MM-DD-toko-iklan` / `YYYY-MM-DD-toko-konten`; `status.json` sama formatnya, `sku` = `"TOKO"`.
 
 | Dari | Ke | Syarat (bukti) |
 |---|---|---|
@@ -103,7 +103,12 @@ Nama `YYYY-MM-DD-toko-dekorasi` / `YYYY-MM-DD-toko-iklan`; `status.json` sama fo
 | QC_IKLAN | APPROVAL_IKLAN | qc LULUS (cek i) |
 | APPROVAL_IKLAN | DIPASANG | pemilik "setuju" dan memasang sendiri |
 | DIPASANG | DIUKUR | 7 hari kemudian: `scripts/ukur.py` + data iklan dari pemilik |
-Revisi & oper ke manusia sama seperti batch SKU. Agent tidak pernah memasang dekorasi atau iklan.
+| NEW | KONTEN_RISET | brief berisi pertanyaan riset (lihat skill riset-konten-marketplace), periode kalender, platform |
+| KONTEN_RISET | KONTEN_RENCANA | `riset-konten.csv` + `riset-konten.md` ada; ≥ 10 konten/iklan dengan link + tanggal (kurang = sebutkan) |
+| KONTEN_RENCANA | QC_KONTEN | `kalender-konten.csv`; head menjalankan ulang `scripts/cek_konten.py --listing ..` exit 0 |
+| QC_KONTEN | APPROVAL_KONTEN | qc LULUS (cek j) |
+| APPROVAL_KONTEN | DIJADWALKAN | pemilik "setuju" dan memposting/menjadwalkan sendiri |
+Revisi & oper ke manusia sama seperti batch SKU. Agent tidak pernah memasang dekorasi/iklan atau memposting konten.
 
 ## Oper ke manusia (pakai kalimat ini)
 "Batch {ID} berhenti di {STATUS}. Masalah: {TEMUAN}. Bukti: {FILE/ID}. Yang saya butuhkan: {AKSI}. Setelah itu proses lanjut dari {LANGKAH} tanpa mengulang tahap yang sudah lulus."

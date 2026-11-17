@@ -37,7 +37,7 @@ Cek file benar-benar ada, hitung ulang angka dengan script, cek video dengan `ff
 Revisi maksimal 2 kali per tahap, setelah itu OPER KE MANUSIA.
 
 ## Perintah
-Pemilik bisa memakai slash command: `/status`, `/batch-baru`, `/lanjut`, `/dekorasi`, `/iklan`, `/ukur`, `/belajar`, `/cek-cloudflare`, `/demo`.
+Pemilik bisa memakai slash command: `/status`, `/batch-baru`, `/lanjut`, `/konten`, `/dekorasi`, `/iklan`, `/ukur`, `/belajar`, `/cek-cloudflare`, `/demo`.
 Hook di `.claude/settings.json`: ringkasan status saat sesi mulai; penjaga yang menolak header Authorization, data mentah/.env
 di git, dan teks mirip kunci API.
 - Siapkan environment: `bash scripts/setup.sh`
@@ -52,6 +52,7 @@ di git, dan teks mirip kunci API.
 - Harga (exit 0 lulus, 1 TIDAK LULUS, 2 input salah): `python3 scripts/harga.py --harga-normal .. --hpp .. --admin-persen 10 [--diskon-persen ..] [--voucher-rp ..]`
 - Kompetitor (exit 0 CUKUP, 1 DATA_KURANG, 2 input salah): `python3 scripts/kompetitor.py --csv batch/<id>/kompetitor.csv --hari-ini YYYY-MM-DD [--harga-kita ..]`
 - Gambar (prompt dari `batch/<id>/prompt-foto.md`; blok `[komposit]` = produk asli + latar AI; exit 2 = WAITING_FOTO, 3 = input salah): `python3 scripts/gambar.py --master depan.jpg [detail.jpg ..] --batch batch/<id> [--provider cloudflare,gemini]`
+- Cek kalender konten (exit 0 LULUS, 1 ada masalah, 2 input salah): `python3 scripts/cek_konten.py --kalender batch/<id>/kalender-konten.csv --produk brain/produk.csv --listing batch/<id>/listing.csv`
 - Latar dekorasi (exit 2 = WAITING_LATAR): `python3 scripts/latar.py --spec batch/<id>/dekorasi.json`
 - Dekorasi (exit 0 ok, 1 cek gagal, 2 spec salah): `python3 scripts/dekorasi.py --spec batch/<id>/dekorasi.json --out batch/<id>/hasil`
 - Iklan (exit 0 ada yang layak, 1 tidak ada, 2 input salah): `python3 scripts/iklan.py --listing .. --produk brain/produk.csv --admin-persen 10 --budget-harian <dari pemilik> --out ..`

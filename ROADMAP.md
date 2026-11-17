@@ -39,6 +39,10 @@ Full build tanpa data asli (2026-11-17, branch `toko-baru`):
 - Tooling: `.claude/settings.json` (izin, hook status & penjaga), `.claude/commands/` (9 perintah), `scripts/setup.sh`, `requirements.txt`,
   font Poppins (OFL) di `aset/font/`.
 
+Riset lebih kuat (2026-11-17): skill market-research (ECC ±229 rb bintang), competitive-brief (resmi Anthropic),
+customer-research & social (coreyhaines31 ±59 rb), skill buatan sendiri riset-konten-marketplace, alur `/konten`
+(KONTEN_RISET → KONTEN_RENCANA → QC_KONTEN → APPROVAL_KONTEN → DIJADWALKAN), `scripts/cek_konten.py`, tool Karyawan AI opsional.
+
 Menunggu data/aksi pemilik:
 - Data asli di Drive, isi `brain/brand-visual.md`, konfirmasi biaya admin & batas platform (masih ASUMSI).
 - Uji FLUX nyata (`/cek-cloudflare`), lalu `/demo --flux`.
