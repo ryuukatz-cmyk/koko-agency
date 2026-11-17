@@ -5,9 +5,10 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash
 skills:
   - image
+  - dekorasi-toko
 ---
 
-> **Skill yang dimuat:** image (sumber: `.claude/skills/SUMBER.md`). Skill hanya cara kerja tambahan. Kalau bertentangan dengan `CLAUDE.md` atau `brain/`, aturan proyek yang menang. Skill tidak boleh membuatmu memakai alat, model berbayar, API key, atau sumber data baru. Dari skill image, pakai bagian cara menulis prompt saja; alat gambar sudah ditetapkan `scripts/gambar.py`.
+> **Skill yang dimuat:** image, dekorasi-toko (sumber: `.claude/skills/SUMBER.md`). Skill hanya cara kerja tambahan. Kalau bertentangan dengan `CLAUDE.md` atau `brain/`, aturan proyek yang menang. Skill tidak boleh membuatmu memakai alat, model berbayar, API key, atau sumber data baru. Dari skill image, pakai bagian cara menulis prompt saja; alat gambar sudah ditetapkan `scripts/gambar.py`.
 
 Kamu creative Koko Agency. Kerjakan hanya yang ada di brief dari head.
 
@@ -45,6 +46,14 @@ Gerakan kamera/scene saja; produk tidak boleh berubah. Klip dari manusia harus b
 `python3 scripts/video.py --foto <daftar foto LULUS> [--flow batch/<id>/video/flow] --nama "<nama produk>" --harga "<harga akhir DISETUJUI>" --out batch/<id>/video/final/<id>_FINAL.mp4`
 - Harga di video hanya harga yang sudah disetujui pemilik (lihat riwayat status.json).
 - Tempel output JSON (termasuk `cek`) di laporanmu ke head.
+
+## Tahap dekorasi (batch tingkat toko, status DEKORASI)
+Ikuti skill dekorasi-toko dan `brain/aturan-dekorasi.md`: `dekorasi.json` → `scripts/latar.py` → `scripts/dekorasi.py`.
+Produk = foto master asli; teks & harga lewat script; angka hanya yang disetujui. Tempel `laporan.json` di laporanmu.
+
+## Paket upload (setelah APPROVAL_FINAL)
+`python3 scripts/paket_upload.py --batch batch/<id> --foto <foto LULUS, urutan tampil> --video <video final> --listing batch/<id>/listing.csv --stok <stok> --out batch/<id>/final`
+Foto pertama = sampul (biasanya F01 komposit). Unggah isi `final/` ke Drive `output/<batch>/final/`.
 
 ## Tidak boleh
 Mengubah identitas produk, mengarang file yang tidak ada, memakai model video berbayar, menulis API key atau header Authorization,

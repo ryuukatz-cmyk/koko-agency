@@ -108,13 +108,13 @@ def _akun_cf(akun_cf_file):
     return akun
 
 
-def _cloudflare(akun, kecil, prompt, ukuran):
-    """kecil = daftar master yang sudah < 512 px (kosong = tanpa referensi)."""
+def _cloudflare(akun, kecil, prompt, ukuran, tinggi=None):
+    """kecil = daftar master yang sudah < 512 px (kosong = tanpa referensi). ukuran = lebar; tinggi default = lebar."""
     form = []
     for i, k in enumerate(kecil[:MAKS_MASTER]):
         form += ["-F", f"input_image_{i}=@{k}"]
     kode, isi = _post(["-X", "POST", "--form-string", f"prompt={prompt}"] + form +
-                      ["-F", f"width={ukuran}", "-F", f"height={ukuran}",
+                      ["-F", f"width={ukuran}", "-F", f"height={tinggi or ukuran}",
                        f"https://api.cloudflare.com/client/v4/accounts/{akun}/ai/run/{CF_MODEL}"])
     _cek(kode, isi, "cloudflare")
     if isi[:4] == b"\x89PNG" or isi[:3] == b"\xff\xd8\xff":

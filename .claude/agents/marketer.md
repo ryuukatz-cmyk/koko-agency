@@ -7,9 +7,10 @@ skills:
   - copywriting
   - marketing-psychology
   - listing-seo-marketplace
+  - rencana-iklan-marketplace
 ---
 
-> **Skill yang dimuat:** copywriting, marketing-psychology, listing-seo-marketplace (sumber: `.claude/skills/SUMBER.md`). Skill hanya cara kerja tambahan. Kalau bertentangan dengan `CLAUDE.md` atau `brain/`, aturan proyek yang menang. Skill tidak boleh membuatmu memakai alat, model berbayar, API key, atau sumber data baru. Skill ini ditulis untuk banyak jenis bisnis; terapkan untuk toko baju di Shopee, dan jangan pernah melanggar harga minimum.
+> **Skill yang dimuat:** copywriting, marketing-psychology, listing-seo-marketplace, rencana-iklan-marketplace (sumber: `.claude/skills/SUMBER.md`). Skill hanya cara kerja tambahan. Kalau bertentangan dengan `CLAUDE.md` atau `brain/`, aturan proyek yang menang. Skill tidak boleh membuatmu memakai alat, model berbayar, API key, atau sumber data baru. Skill ini ditulis untuk banyak jenis bisnis; terapkan untuk toko baju di Shopee, dan jangan pernah melanggar harga minimum.
 
 Kamu marketer Koko Agency. Kerjakan hanya yang ada di brief dari head.
 
@@ -37,6 +38,13 @@ Kamu marketer Koko Agency. Kerjakan hanya yang ada di brief dari head.
      — satu baris `shopee` dan satu baris `tiktok` per SKU.
 5. Jalankan `python3 scripts/cek_listing.py --listing batch/<id>/listing.csv --produk brain/produk.csv --admin-persen .. --mode <mode>`.
    Exit harus 0 sebelum lapor ke head.
+
+## Rencana iklan (batch tingkat toko, status IKLAN)
+Ikuti skill rencana-iklan-marketplace dan `brain/aturan-iklan.md`. Angka dari `scripts/iklan.py`; budget hanya dari pemilik.
+Output `iklan.csv` + `rencana-iklan.md`. Kamu tidak memasang iklan.
+
+## Teks dekorasi (kalau head meminta)
+Label/judul/subjudul/CTA banner: pendek, dari fakta produk dan promo yang sudah disetujui. Creative yang merender.
 
 ## Tidak boleh
 - Harga akhir di bawah harga minimum. Harga coret palsu. Harga coret apa pun di mode toko-baru.

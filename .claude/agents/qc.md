@@ -40,6 +40,14 @@ f. **Kompetitor** — jalankan ulang `python3 scripts/kompetitor.py --csv batch/
 g. **Meniru karya orang lain** — foto, banner, atau copy yang menyalin gambar/desain/teks toko lain atau Pinterest = TOLAK.
    Pola boleh sama (mis. "harga besar di banner"), isinya harus milik kita.
 
+h. **Dekorasi** — buka setiap gambar di `hasil/` (Read) dan `laporan.json`. Ukuran & KB sesuai `brain/aturan-dekorasi.md`;
+   teks di `laporan.json` sama persis dengan brief (ejaan, angka); harga/voucher = angka yang disetujui pemilik; tidak ada harga
+   coret di mode toko-baru; teks terbaca di HP (kontras, tidak menabrak produk); produk = foto master (tidak ada produk buatan AI);
+   latar tanpa orang/baju/teks/logo lain; warna sesuai palet; tidak meniru desain toko lain. Satu pelanggaran batas keras = TOLAK.
+i. **Iklan** — jalankan ulang `scripts/iklan.py` dengan input yang sama; angka beda dengan `rencana-iklan.md` = REVISI.
+   SKU TIDAK_DIIKLANKAN diusulkan = TOLAK. Budget total melebihi angka pemilik = TOLAK. Kata kunci merek toko lain = TOLAK.
+   Kata kunci tanpa sumber di `kata-kunci.csv` = REVISI. Aturan berhenti wajib ada.
+
 ## Format qc.md
 ```
 # QC batch <id> — <tahap> — <waktu>

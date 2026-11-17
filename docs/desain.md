@@ -1,4 +1,7 @@
-# Desain — Agency Deadstock Koko
+# Desain — Koko Agency (awalnya Agency Deadstock Koko)
+
+> Pembaruan 2026-11-17: mode `toko-baru` (Shopee + TikTok Shop), dekorasi, rencana iklan, paket upload, pengukuran.
+> Ringkasan terbaru di `README.md`, `CLAUDE.md`, dan `ROADMAP.md`; bagian di bawah adalah desain awal mode deadstock.
 
 Tanggal: 2026-11-10. Status: disetujui pemilik ("lanjut, pakai semua default aman") + keputusan media tambahan.
 
@@ -164,4 +167,4 @@ CLAUDE.md, ROADMAP.md, .gitignore
 - Dekorasi toko: agent membuat usulan, pemilik memasang. Karya orang lain hanya inspirasi pola (qc cek g).
 - Pembagian tempat: komputer pemilik = riset lewat Chrome; cloud = deadstock, harga, foto (token ada di environment cloud), video, qc.
   Penghubungnya repo GitHub yang sama.
-- Tidak termasuk: produksi banner, jadwal otomatis, landing page (ROADMAP).
+- Tidak termasuk (awal): produksi banner, jadwal otomatis, landing page (ROADMAP). Produksi banner sudah dibangun 2026-11-17.

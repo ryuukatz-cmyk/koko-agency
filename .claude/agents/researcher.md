@@ -42,6 +42,15 @@ Aturan lengkap: `brain/aturan-kompetitor.md`. Langkah:
    dan daftar halaman yang tidak bisa dibuka. Pisahkan **fakta yang terlihat** dari **dugaan**.
 6. Status `DATA_KURANG` boleh, asal alasannya jelas. Jangan mengisi angka dari ingatan.
 
+## Pengukuran toko baru (status DIUKUR, mingguan)
+`python3 scripts/ukur.py --pesanan data/mentah/<export pesanan> --katalog data/katalog.csv --listing batch/<id>/listing.csv
+--admin-persen .. --sejak <tanggal LIVE> --hari-ini YYYY-MM-DD --out batch/<id>/hasil.csv` → tulis `hasil.md`
+(unit, sisa stok, uang masuk, per minggu, dibanding iklan kalau ada) + usulan satu baris untuk `brain/pelajaran.md`.
+
+## Cek spesifikasi platform (brief khusus dari head)
+Ukuran dekorasi, batas judul, jumlah foto, biaya admin: buka Seller Centre/halaman bantuan resmi lewat Chrome pemilik, baca saja,
+catat angka + link + tanggal di draf `belajar/`. Head yang memperbarui `brain/` dan konstanta script.
+
 ## Riset belajar (fase belajar)
 Aturan lengkap: `brain/aturan-belajar.md`. Hanya dari brief head yang berisi satu pertanyaan.
 1. Cari jawabannya (Claude in Chrome kalau tersedia; kalau tidak, WebSearch/WebFetch). Maksimal ±20 halaman.

@@ -30,16 +30,24 @@ Tahap 1 toko baru (2026-11-17, branch `toko-baru-tahap-1`):
 - Keputusan tertunda di atas: input `1-stok-gudang` dan "tanpa harga coret" sudah dipakai. Masih ASUMSI: biaya admin toko baru (10%),
   batas judul Shopee 100 / TikTok 255, urutan skor 60/40.
 
-Berikutnya:
-- Tahap 2: file upload massal Shopee (menunggu template Excel kategori koko dari Seller Centre milik pemilik).
-- Tahap 3: produksi dekorasi toko — `scripts/dekorasi.py` (latar AI + produk asli + teks lewat kode, ukuran persis),
-  skill `dekorasi-toko` untuk creative, status DEKORASI → QC_DEKORASI → APPROVAL_DEKORASI, cek qc baru, `brain/aturan-dekorasi.md`
-  (ukuran banner/etalase dicek researcher di Seller Centre).
-- Tahap 4: rencana iklan (marketer menyusun kata kunci & budget Shopee Ads; pemilik memasang & membayar) + ukur mingguan.
+Full build tanpa data asli (2026-11-17, branch `toko-baru`):
+- Dekorasi: `scripts/latar.py` + `scripts/dekorasi.py` (produk asli, teks lewat kode, cek ukuran/KB/kontras), skill `dekorasi-toko`,
+  `brain/aturan-dekorasi.md` (ukuran ASUMSI), batch tingkat toko DEKORASI → QC_DEKORASI → APPROVAL_DEKORASI → DIPASANG, qc cek h.
+- Iklan: `scripts/iklan.py` (ROAS impas/target, bid maks, budget per SKU), skill `rencana-iklan-marketplace`, `brain/aturan-iklan.md`, qc cek i.
+- Ukur toko baru: `scripts/ukur.py`. Paket upload: `scripts/paket_upload.py` (foto urut, video, listing per platform, checklist, zip).
+- Data contoh `contoh/` (4 SKU palsu) + `scripts/demo.py` + tes integrasi alur lengkap.
+- Tooling: `.claude/settings.json` (izin, hook status & penjaga), `.claude/commands/` (9 perintah), `scripts/setup.sh`, `requirements.txt`,
+  font Poppins (OFL) di `aset/font/`.
+
+Menunggu data/aksi pemilik:
+- Data asli di Drive, isi `brain/brand-visual.md`, konfirmasi biaya admin & batas platform (masih ASUMSI).
+- Uji FLUX nyata (`/cek-cloudflare`), lalu `/demo --flux`.
+- File upload massal Shopee: menunggu template Excel kategori koko dari Seller Centre milik pemilik.
+- Landing page + admin (IG/FB ads → WA) — desain menunggu bahan; skill `ui-ux-pro-max` sudah tersedia.
 
 NANTI (belum dibangun):
 - **landing page + halaman admin** (IG/FB ads → pilih produk → rekap → WA admin). Desain menunggu bahan.
-- **produksi dekorasi toko** (banner/etalase dibuat creative, dipasang pemilik).
+- ~~produksi dekorasi toko~~ — sudah dibangun 2026-11-17 (`scripts/dekorasi.py`).
 - **jadwal otomatis** (cek Drive tiap minggu, berhenti di titik persetujuan).
 
 Fase 2 (NANTI, jangan dibangun sebelum Fase 1 terbukti di batch nyata):

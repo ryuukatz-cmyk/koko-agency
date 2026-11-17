@@ -26,14 +26,23 @@ def durasi_per_foto(n):
     return d
 
 
+def ukuran_font(teks, font, maks, lebar=W - 2 * 60 - 2 * 24):
+    """Ukuran font terbesar (<= maks) supaya teks muat selebar video; nama produk panjang tidak terpotong."""
+    from PIL import ImageFont
+    s = maks
+    while s > 28 and ImageFont.truetype(font, s).getlength(teks) > lebar:
+        s -= 2
+    return s
+
+
 def _teks(nama, harga, kerja):
     # textfile= menghindari masalah escape karakter khusus di nama produk
     (kerja / "nama.txt").write_text(nama, encoding="utf-8")
     (kerja / "harga.txt").write_text(harga, encoding="utf-8")
     f = _font()
     gaya = f"fontfile='{f}':expansion=none:fontcolor=white:box=1:boxcolor=black@0.55:boxborderw=24:x=(w-text_w)/2"
-    return (f"drawtext=textfile='{kerja / 'nama.txt'}':{gaya}:fontsize=64:y=220,"
-            f"drawtext=textfile='{kerja / 'harga.txt'}':{gaya}:fontsize=96:y=h-420")
+    return (f"drawtext=textfile='{kerja / 'nama.txt'}':{gaya}:fontsize={ukuran_font(nama, f, 64)}:y=220,"
+            f"drawtext=textfile='{kerja / 'harga.txt'}':{gaya}:fontsize={ukuran_font(harga, f, 96)}:y=h-420")
 
 
 def _jalankan(args):

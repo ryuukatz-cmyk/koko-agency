@@ -9,6 +9,8 @@
 | image | creative | coreyhaines31/marketingskills | 9d6d7ce | ±59 rb | MIT |
 | riset-kata-kunci-marketplace | researcher | buatan sendiri untuk proyek ini (2026-11-17) | - | - | milik pemilik |
 | listing-seo-marketplace | marketer | buatan sendiri untuk proyek ini (2026-11-17) | - | - | milik pemilik |
+| rencana-iklan-marketplace | marketer | buatan sendiri untuk proyek ini (2026-11-17) | - | - | milik pemilik |
+| dekorasi-toko | creative | buatan sendiri untuk proyek ini (2026-11-17) | - | - | milik pemilik |
 | ui-ux-pro-max | (untuk landing page nanti) | nextlevelbuilder/ui-ux-pro-max-skill | 4f2dbb6 | ±147 rb | MIT |
 
 Pemeriksaan keamanan:

@@ -89,5 +89,17 @@ class TestVideo(unittest.TestCase):
             video.buat([], None, "K", "Rp 1", self.d / "e.mp4")
 
 
+class TestUkuranFont(unittest.TestCase):
+    def test_nama_panjang_dikecilkan_supaya_muat(self):
+        import video
+        from PIL import ImageFont
+        f = video._font()
+        nama = "Koko Lengan Panjang Putih Bordir Emas Kerah Shanghai"
+        s = video.ukuran_font(nama, f, 64)
+        self.assertLess(s, 64)
+        self.assertLessEqual(ImageFont.truetype(f, s).getlength(nama), video.W - 2 * 60 - 2 * 24)
+        self.assertEqual(video.ukuran_font("Koko Navy", f, 64), 64)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -77,9 +77,9 @@ Satu batch = satu SKU, untuk Shopee dan TikTok Shop sekaligus (listing.csv punya
 | WAITING_FLOW | EDIT_VIDEO | klip ada di Drive `.../flow/`, atau pemilik bilang lanjut tanpa Flow |
 | EDIT_VIDEO | QC_FINAL | video final ada dan `--cek` ok |
 | QC_FINAL | APPROVAL_FINAL | qc LULUS |
-| APPROVAL_FINAL | READY_UPLOAD | pemilik menulis "setuju" |
+| APPROVAL_FINAL | READY_UPLOAD | pemilik menulis "setuju"; creative menjalankan `scripts/paket_upload.py` (hanya foto LULUS); `final/paket-<id>.zip` + `CHECKLIST-UPLOAD.md` ada |
 | READY_UPLOAD | LIVE | pemilik bilang sudah upload |
-| LIVE | DIUKUR | researcher mengukur dari export baru |
+| LIVE | DIUKUR | researcher mengukur dari export baru (`scripts/ukur.py` untuk toko-baru) |
 
 - qc REVISI → kembali ke agent pembuat (status tahap pembuatan). Hitung di `revisi.<tahap>`. Revisi ke-3 → `OPER_KE_MANUSIA`.
 - Kalau cek bukti oleh head sendiri gagal (file kurang, ukuran 0, laporan tidak cocok isi folder), itu juga REVISI dan ikut dihitung.
@@ -87,6 +87,23 @@ Satu batch = satu SKU, untuk Shopee dan TikTok Shop sekaligus (listing.csv punya
 - Format `status.json`:
   `{"batch": "...", "sku": "...", "mode": "toko-baru", "status": "...", "revisi": {}, "riwayat": [{"waktu": "...", "dari": "...", "ke": "...", "oleh": "head", "alasan": "...", "bukti": "..."}]}`
   (batch lama tanpa `mode` = `deadstock`).
+
+## Batch tingkat toko (bukan per SKU)
+Nama `YYYY-MM-DD-toko-dekorasi` / `YYYY-MM-DD-toko-iklan`; `status.json` sama formatnya, `sku` = `"TOKO"`.
+
+| Dari | Ke | Syarat (bukti) |
+|---|---|---|
+| NEW | DEKORASI | `brain/brand-visual.md` terisi; brief berisi kampanye, SKU, angka yang sudah disetujui |
+| DEKORASI | WAITING_LATAR | `scripts/latar.py` exit 2 (latar AI gagal) |
+| DEKORASI / WAITING_LATAR | QC_DEKORASI | `dekorasi.json` + `hasil/laporan.json` ok; head membuka tiap gambar (Read) |
+| QC_DEKORASI | APPROVAL_DEKORASI | qc LULUS (cek h) |
+| APPROVAL_DEKORASI | DIPASANG | pemilik "setuju" lalu bilang sudah dipasang |
+| NEW | IKLAN | budget harian dari pemilik; SKU LIVE/READY_UPLOAD |
+| IKLAN | QC_IKLAN | `iklan.csv` + `rencana-iklan.md`; head menjalankan ulang `scripts/iklan.py` |
+| QC_IKLAN | APPROVAL_IKLAN | qc LULUS (cek i) |
+| APPROVAL_IKLAN | DIPASANG | pemilik "setuju" dan memasang sendiri |
+| DIPASANG | DIUKUR | 7 hari kemudian: `scripts/ukur.py` + data iklan dari pemilik |
+Revisi & oper ke manusia sama seperti batch SKU. Agent tidak pernah memasang dekorasi atau iklan.
 
 ## Oper ke manusia (pakai kalimat ini)
 "Batch {ID} berhenti di {STATUS}. Masalah: {TEMUAN}. Bukti: {FILE/ID}. Yang saya butuhkan: {AKSI}. Setelah itu proses lanjut dari {LANGKAH} tanpa mengulang tahap yang sudah lulus."

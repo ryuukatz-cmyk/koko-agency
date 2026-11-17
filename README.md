@@ -48,6 +48,28 @@ Koko Agency/
 
 File lama tidak perlu dihapus; agent memakai export dengan tanggal **terbaru**.
 
+## Sekali di awal: sambungkan alat
+| Alat | Untuk | Cara |
+|---|---|---|
+| Google Drive (connector claude.ai) | head membaca `input/` dan menulis `output/` | claude.ai → Settings → Connectors → Google Drive |
+| Claude in Chrome (ekstensi, di komputermu) | riset Shopee/TikTok/Pinterest, saran kata kunci, cek ukuran di Seller Centre | pasang ekstensi, jalankan riset dari aplikasi desktop |
+| Cloudflare Workers AI (token di environment koko) | foto & latar FLUX gratis ±10.000 neurons/hari | network environment izinkan `api.cloudflare.com`, token dipasang sebagai secret proxy |
+| Gemini (opsional, perlu billing) | provider gambar cadangan | key di proxy environment |
+Lalu di sesi cloud jalankan `bash scripts/setup.sh` (cek ffmpeg/Pillow/openpyxl + tes cepat).
+
+## Perintah cepat (ketik di sesi Claude Code)
+| Perintah | Hasil |
+|---|---|
+| `/status` | apa yang menunggu keputusanmu |
+| `/batch-baru [SKU]` | mulai 1 SKU sampai tabel persetujuan harga |
+| `/lanjut [batch] [catatan]` | lanjutkan setelah kamu setuju / menaruh file |
+| `/dekorasi [kampanye]` | banner carousel, voucher, kategori untuk toko |
+| `/iklan [budget harian]` | rencana iklan dari margin (kamu yang pasang & bayar) |
+| `/ukur [tanggal tayang]` | hasil mingguan dari export pesanan baru |
+| `/belajar <pertanyaan>` | riset satu pertanyaan → pengetahuan baru di `brain/` |
+| `/cek-cloudflare` | uji FLUX nyata |
+| `/demo [--flux]` | latihan alur lengkap dengan data `contoh/` |
+
 ## Sekali di awal: cek Cloudflare FLUX
 Di sesi cloud environment **koko**, tulis: **"jalankan python3 scripts/cek_cloudflare.py"**.
 Hasilnya 3 gambar uji di `tests/out/cek-cloudflare/` dan `"ok": true`. Kalau `false`, ikuti isi `saran`
@@ -59,6 +81,10 @@ Jatah gratis Cloudflare ±10.000 neurons/hari (reset 07.00 WIB) ≈ ±90 foto 10
 2. Isi `brain/brand-visual.md` (nama toko, palet, gaya foto) — atau minta creative membuat 2–3 usulan untuk kamu pilih.
 3. Buka sesi baru di cloud dan tulis: **"mulai batch toko baru dari bahan di Drive."**
 
+## Latihan tanpa data asli
+`contoh/` berisi 4 SKU palsu (foto, stok, HPP, info produk). Jalankan `/demo` untuk melihat hasil tiap langkah:
+katalog → harga → listing Shopee & TikTok → 10 foto → video → 3 banner → rencana iklan → paket upload (zip + checklist).
+
 ## Kapan kamu dipanggil
 | Saat | Yang kamu lakukan |
 |---|---|
@@ -66,6 +92,8 @@ Jatah gratis Cloudflare ±10.000 neurons/hari (reset 07.00 WIB) ≈ ±90 foto 10
 | Foto gagal dibuat otomatis | Buat foto sendiri dari daftar prompt, taruh di Drive `output/<batch>/foto/` |
 | (Opsional) video Flow | Kalau mau video lebih hidup, buat klip di Google Flow dan taruh di Drive `output/<batch>/flow/` |
 | **Persetujuan akhir** | Lihat foto, video, dan laporan qc, lalu jawab "setuju" |
+| Dekorasi | Lihat banner, jawab "setuju", lalu pasang di Seller Centre > Dekorasi Toko |
+| Iklan | Beri budget harian, setujui rencana, lalu pasang & bayar sendiri di dashboard iklan |
 | Upload | Kamu sendiri yang upload ke Seller Centre (sistem tidak pernah login ke Shopee) |
 | Ada masalah | Head menulis: masalahnya apa, buktinya apa, dan apa yang dibutuhkan darimu |
 

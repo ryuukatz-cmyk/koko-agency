@@ -131,3 +131,21 @@ Simulasi CLI tanpa jaringan: `gambar.py --provider cloudflare` → `WAITING_FOTO
 **Belum teruji nyata:** Cloudflare FLUX dengan 2+ referensi dan mode komposit dengan latar FLUX asli. Sesi pembuat
 diblokir ke `api.cloudflare.com`. Jalankan di environment koko: `python3 scripts/cek_cloudflare.py` (exit 0 = jalan),
 lalu buka `tests/out/cek-cloudflare/2-referensi.*` (hitung kancing) dan `3-komposit.png`.
+
+## Full build tanpa data asli (2026-11-17, branch `toko-baru`)
+
+`python3 -m unittest discover -s tests` → **129 tes lulus**. Data contoh di `contoh/` (4 SKU palsu), jaringan di-mock.
+
+| Fitur | Tes | Bukti |
+|---|---|---|
+| Dekorasi | `test_dekorasi.py` (8) | ukuran persis, KB ≤ 2.000, panel kontras otomatis di latar terang (≥ 4,5), produk navy asli muncul, teks tercatat persis untuk qc, spec salah ditolak |
+| Latar dekorasi | `TestLatar` (3) | ukuran permintaan kelipatan 16 dengan rasio sama, tanpa referensi produk, latar yang sudah ada tidak dibuat ulang |
+| Iklan | `test_iklan.py` (5) | margin 58.100, ROAS impas 2,74, target 5,47, bid maks 581 dihitung manual; margin rugi tidak diiklankan; budget tidak melebihi total |
+| Ukur | `test_ukur.py` (3) | pesanan sebelum tayang & batal tidak dihitung, per minggu ISO, data pembeli tidak bocor |
+| Paket upload | `test_paket_upload.py` (5) | urutan foto = urutan argumen, batas 9 foto, paket lama dibersihkan, zip + checklist |
+| Penjaga & status | `test_penjaga.py` (9) | Authorization/user-agent palsu/data mentah/kunci ditolak (exit 2); status menandai batch yang menunggu pemilik |
+| Video | `TestUkuranFont` | nama produk panjang dikecilkan supaya tidak terpotong (temuan dari demo) |
+| Alur lengkap | `test_demo.py` (3) | `demo.py` offline: katalog (MARUN → DATA_KURANG) → harga → listing lulus → 10 foto → video 1080×1920 25,5 dtk → 3 banner → iklan → zip |
+
+Dilihat manual (Read): foto komposit F01, frame video dtk 12, banner D01–D03 — produk sama dengan master, teks rapi.
+**Belum teruji nyata:** FLUX Cloudflare (sesi pembuat diblokir). Jalankan `/cek-cloudflare` lalu `/demo --flux` di environment koko.
