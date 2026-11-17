@@ -112,3 +112,22 @@ Temuan:
 - Gemini gambar nyata (kuota free tier 0, perlu billing).
 - Nama kolom export Shopee & file HPP asli (Fase 4).
 - QC visual pada foto AI sungguhan (data uji berupa gambar sederhana; cacatnya mencolok).
+
+## Tahap 1 toko baru (2026-11-17, branch `toko-baru-tahap-1`)
+
+`python3 -m unittest discover -s tests` → **92 tes lulus** (65 lama + 27 baru). Semua data palsu, jaringan di-mock.
+
+| Fitur | Tes | Bukti |
+|---|---|---|
+| Stok gudang (mode toko-baru) | `test_stok_gudang.py` (8) | SIAP/DATA_KURANG, skor 60/40 dihitung manual, harga rencana di bawah minimum ditandai, tanggal tak terbaca berhenti |
+| Cek listing | `test_cek_listing.py` (11) | panjang judul per platform, kata kunci utama di judul, klaim palsu, harga minimum per platform, harga coret dilarang di toko-baru |
+| Banyak master → `input_image_0..n` | `test_banyak_master_dikirim_sebagai_input_image_berurutan` | setiap referensi < 512 px |
+| Urutan provider | `test_urutan_provider_*` | `cloudflare,gemini` → Gemini tidak dipanggil |
+| Komposit | `test_komposit_produk_asli_tidak_berubah` | latar dibuat tanpa referensi produk; badan navy & 5 kancing putih master tetap; pojok = latar AI |
+| Komposit master tidak polos | `test_komposit_master_tidak_polos_jadi_waiting_foto` | hanya foto komposit yang WAITING_FOTO, foto scene tetap jalan |
+
+Simulasi CLI tanpa jaringan: `gambar.py --provider cloudflare` → `WAITING_FOTO` exit 2 dengan alasan tercatat; master tidak ada → exit 3.
+
+**Belum teruji nyata:** Cloudflare FLUX dengan 2+ referensi dan mode komposit dengan latar FLUX asli. Sesi pembuat
+diblokir ke `api.cloudflare.com`. Jalankan di environment koko: `python3 scripts/cek_cloudflare.py` (exit 0 = jalan),
+lalu buka `tests/out/cek-cloudflare/2-referensi.*` (hitung kancing) dan `3-komposit.png`.

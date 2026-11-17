@@ -148,5 +148,111 @@ class TestGambar(unittest.TestCase):
             self.assertLess(max(im.size), 512)
 
 
+def master_koko(path):
+    """Master sintetis: latar putih polos, badan navy, 5 kancing putih (harus tetap ada setelah dipotong)."""
+    from PIL import ImageDraw
+    im = Image.new("RGB", (600, 800), "white")
+    d = ImageDraw.Draw(im)
+    d.rectangle((150, 150, 450, 700), fill=(31, 42, 68))
+    for i in range(5):
+        d.ellipse((290, 200 + i * 60, 310, 220 + i * 60), fill="white")
+    im.save(path)
+    return path
+
+
+class TestGambarTokoBaru(unittest.TestCase):
+    def setUp(self):
+        self._asli = gambar._post
+        os.environ.pop("CF_ACCOUNT_ID", None)
+        os.environ.pop("KOKO_PROVIDER", None)
+
+    def tearDown(self):
+        gambar._post = self._asli
+        os.environ.pop("CF_ACCOUNT_ID", None)
+        os.environ.pop("KOKO_PROVIDER", None)
+
+    def test_banyak_master_dikirim_sebagai_input_image_berurutan(self):
+        os.environ["CF_ACCOUNT_ID"] = "akun123"
+        palsu = gambar._post = Palsu()
+        d = siapkan(1)
+        Image.new("RGB", (900, 900), "gold").save(d / "detail.png")
+        gambar.buat([d / "master.png", d / "detail.png"], d)
+        cf = [a for a in palsu.panggilan if "api.cloudflare.com" in a[-1]][0]
+        form = [x for x in cf if x.startswith("input_image_")]
+        self.assertEqual([f.split("=")[0] for f in form], ["input_image_0", "input_image_1"])
+        for f in form:  # setiap referensi wajib < 512 px (aturan Cloudflare)
+            with Image.open(f.split("=@")[1]) as im:
+                self.assertLess(max(im.size), 512)
+
+    def test_lebih_dari_4_master_ditolak(self):
+        d = siapkan(1)
+        with self.assertRaises(gambar.Gagal):
+            gambar.buat([d / "master.png"] * 5, d)
+
+    def test_urutan_provider_cloudflare_dulu(self):
+        os.environ["CF_ACCOUNT_ID"] = "akun123"
+        palsu = gambar._post = Palsu()
+        d = siapkan(2)
+        hasil = gambar.buat(d / "master.png", d, urutan="cloudflare,gemini")
+        self.assertEqual(hasil["status"], "SELESAI")
+        self.assertEqual(palsu.hitung(":generateContent"), 0)  # Gemini tidak perlu dicoba
+        meta = json.loads((d / "foto" / "metadata.json").read_text())
+        self.assertEqual(meta["urutan_provider"], ["cloudflare", "gemini"])
+
+    def test_urutan_provider_dari_env(self):
+        os.environ["KOKO_PROVIDER"] = "cloudflare"
+        self.assertEqual(gambar._urutan(None), ["cloudflare"])
+
+    def test_provider_tidak_dikenal_ditolak(self):
+        for salah in ("midjourney", "cloudflare,cloudflare", ""):
+            with self.assertRaises(gambar.Gagal):
+                gambar._urutan(salah)
+
+    def test_komposit_produk_asli_tidak_berubah(self):
+        os.environ["CF_ACCOUNT_ID"] = "akun123"
+        latar = io.BytesIO(); Image.new("RGB", (1024, 1024), (200, 170, 130)).save(latar, "PNG")
+        palsu = gambar._post = Palsu(cf=(200, latar.getvalue()))
+        d = siapkan(1)
+        master_koko(d / "master.png")
+        (d / "prompt-foto.md").write_text("## F01\n[komposit] empty wooden display table, warm light, no people\n")
+        hasil = gambar.buat(d / "master.png", d, urutan="cloudflare")
+        self.assertEqual(hasil["status"], "SELESAI")
+        cf = [a for a in palsu.panggilan if "api.cloudflare.com" in a[-1]][0]
+        self.assertFalse(any(x.startswith("input_image_") for x in cf))  # latar dibuat tanpa referensi produk
+        self.assertIn("prompt=empty wooden display table, warm light, no people", cf)  # tanda [komposit] tidak terkirim
+        meta = json.loads((d / "foto" / "metadata.json").read_text())
+        self.assertEqual(meta["foto"][0]["mode"], "komposit")
+        self.assertTrue((d / "foto" / "latar" / "F01.png").exists())
+        with Image.open(d / "foto" / "F01.png") as im:
+            self.assertEqual(im.size, (1024, 1024))
+            px = im.convert("RGB")
+            self.assertEqual(px.getpixel((5, 5)), (200, 170, 130))       # pojok = latar AI
+            tengah = px.getpixel((400, 600))  # badan, di samping deret kancing
+            self.assertLess(max(abs(a - b) for a, b in zip(tengah, (31, 42, 68))), 6)  # badan navy asli
+            # kancing putih di tengah badan tetap ada (tidak ikut dianggap latar)
+            putih = sum(1 for y in range(0, 1024, 2) if min(px.getpixel((512, y))) > 230)
+            self.assertGreater(putih, 20)
+
+    def test_komposit_master_tidak_polos_jadi_waiting_foto(self):
+        import random
+        os.environ["CF_ACCOUNT_ID"] = "akun123"
+        gambar._post = Palsu()
+        d = siapkan(2)
+        acak = random.Random(1)
+        im = Image.new("RGB", (300, 300))
+        im.putdata([tuple(acak.randrange(256) for _ in range(3)) for _ in range(300 * 300)])
+        im.save(d / "master.png")
+        (d / "prompt-foto.md").write_text("## F01\n[komposit] latar\n\n## F02\nscene biasa\n")
+        hasil = gambar.buat(d / "master.png", d, urutan="cloudflare")
+        self.assertEqual(hasil["kurang"], ["F01"])   # hanya foto komposit yang terdampak
+        self.assertEqual(hasil["dibuat"], ["F02"])
+        meta = json.loads((d / "foto" / "metadata.json").read_text())
+        self.assertTrue(any("tidak polos" in (g["alasan"] or "") for g in meta["gagal"]))
+
+    def test_cli_input_salah_exit_3(self):
+        d = siapkan(1)
+        self.assertEqual(gambar.main(["--master", str(d / "tidak-ada.png"), "--batch", str(d)]), 3)
+
+
 if __name__ == "__main__":
     unittest.main()
