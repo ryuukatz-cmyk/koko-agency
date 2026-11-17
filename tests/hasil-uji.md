@@ -112,3 +112,40 @@ Temuan:
 - Gemini gambar nyata (kuota free tier 0, perlu billing).
 - Nama kolom export Shopee & file HPP asli (Fase 4).
 - QC visual pada foto AI sungguhan (data uji berupa gambar sederhana; cacatnya mencolok).
+
+## Tahap 1 toko baru (2026-11-17, branch `toko-baru-tahap-1`)
+
+`python3 -m unittest discover -s tests` → **92 tes lulus** (65 lama + 27 baru). Semua data palsu, jaringan di-mock.
+
+| Fitur | Tes | Bukti |
+|---|---|---|
+| Stok gudang (mode toko-baru) | `test_stok_gudang.py` (8) | SIAP/DATA_KURANG, skor 60/40 dihitung manual, harga rencana di bawah minimum ditandai, tanggal tak terbaca berhenti |
+| Cek listing | `test_cek_listing.py` (11) | panjang judul per platform, kata kunci utama di judul, klaim palsu, harga minimum per platform, harga coret dilarang di toko-baru |
+| Banyak master → `input_image_0..n` | `test_banyak_master_dikirim_sebagai_input_image_berurutan` | setiap referensi < 512 px |
+| Urutan provider | `test_urutan_provider_*` | `cloudflare,gemini` → Gemini tidak dipanggil |
+| Komposit | `test_komposit_produk_asli_tidak_berubah` | latar dibuat tanpa referensi produk; badan navy & 5 kancing putih master tetap; pojok = latar AI |
+| Komposit master tidak polos | `test_komposit_master_tidak_polos_jadi_waiting_foto` | hanya foto komposit yang WAITING_FOTO, foto scene tetap jalan |
+
+Simulasi CLI tanpa jaringan: `gambar.py --provider cloudflare` → `WAITING_FOTO` exit 2 dengan alasan tercatat; master tidak ada → exit 3.
+
+**Belum teruji nyata:** Cloudflare FLUX dengan 2+ referensi dan mode komposit dengan latar FLUX asli. Sesi pembuat
+diblokir ke `api.cloudflare.com`. Jalankan di environment koko: `python3 scripts/cek_cloudflare.py` (exit 0 = jalan),
+lalu buka `tests/out/cek-cloudflare/2-referensi.*` (hitung kancing) dan `3-komposit.png`.
+
+## Full build tanpa data asli (2026-11-17, branch `toko-baru`)
+
+`python3 -m unittest discover -s tests` → **129 tes lulus**. Data contoh di `contoh/` (4 SKU palsu), jaringan di-mock.
+
+| Fitur | Tes | Bukti |
+|---|---|---|
+| Dekorasi | `test_dekorasi.py` (8) | ukuran persis, KB ≤ 2.000, panel kontras otomatis di latar terang (≥ 4,5), produk navy asli muncul, teks tercatat persis untuk qc, spec salah ditolak |
+| Latar dekorasi | `TestLatar` (3) | ukuran permintaan kelipatan 16 dengan rasio sama, tanpa referensi produk, latar yang sudah ada tidak dibuat ulang |
+| Iklan | `test_iklan.py` (5) | margin 58.100, ROAS impas 2,74, target 5,47, bid maks 581 dihitung manual; margin rugi tidak diiklankan; budget tidak melebihi total |
+| Ukur | `test_ukur.py` (3) | pesanan sebelum tayang & batal tidak dihitung, per minggu ISO, data pembeli tidak bocor |
+| Paket upload | `test_paket_upload.py` (5) | urutan foto = urutan argumen, batas 9 foto, paket lama dibersihkan, zip + checklist |
+| Penjaga & status | `test_penjaga.py` (9) | Authorization/user-agent palsu/data mentah/kunci ditolak (exit 2); status menandai batch yang menunggu pemilik |
+| Video | `TestUkuranFont` | nama produk panjang dikecilkan supaya tidak terpotong (temuan dari demo) |
+| Alur lengkap | `test_demo.py` (3) | `demo.py` offline: katalog (MARUN → DATA_KURANG) → harga → listing lulus → 10 foto → video 1080×1920 25,5 dtk → 3 banner → iklan → zip |
+
+Dilihat manual (Read): foto komposit F01, frame video dtk 12, banner D01–D03 — produk sama dengan master, teks rapi.
+**Belum teruji nyata:** FLUX Cloudflare (sesi pembuat diblokir). Jalankan `/cek-cloudflare` lalu `/demo --flux` di environment koko.

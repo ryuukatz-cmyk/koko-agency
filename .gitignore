@@ -8,3 +8,4 @@ batch/*/video/
 tests/out/
 __pycache__/
 .env
+demo-out/

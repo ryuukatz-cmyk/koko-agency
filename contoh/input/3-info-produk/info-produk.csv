@@ -1,0 +1,5 @@
+SKU,nama,warna,ukuran,bahan,fakta_boleh_diklaim,catatan
+CONTOH-KOKO-NAVY,Koko Lengan Panjang Bordir Navy,navy,M;L;XL,CONTOH-isi dari data asli,lengan panjang;kerah shanghai;bordir dada kiri warna emas;5 kancing putih;warna navy,CONTOH
+CONTOH-KOKO-PUTIH,Koko Lengan Panjang Putih Bordir Emas,putih gading,M;L;XL,CONTOH-isi dari data asli,lengan panjang;kerah shanghai;bordir dada kiri warna emas;6 kancing;warna putih gading,CONTOH
+CONTOH-KOKO-SAGE,Koko Lengan Pendek Hijau Sage,hijau sage,M;L;XL,CONTOH-isi dari data asli,lengan pendek;kerah shanghai;bordir dada kiri warna putih;4 kancing cokelat;warna hijau sage,CONTOH
+CONTOH-KOKO-MARUN,Koko Lengan Panjang Marun,marun,M;L;XL,CONTOH-isi dari data asli,lengan panjang;kerah shanghai;warna marun,CONTOH
